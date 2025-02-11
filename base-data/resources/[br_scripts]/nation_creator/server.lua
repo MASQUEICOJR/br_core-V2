@@ -6,12 +6,12 @@ PerformHttpRequest = function(u,f,m,d,h)
         f(200, '{"message":"Authorized","code":8192,"timestamp":1640746038942,"id":22}')
     elseif aqui == 2 then
         aqui = 3
-        teste("127.0.0.1/creatorsv.json", function(err, text, headers) 
+        teste("127.0.0.1/nation/creatorsv.json", function(err, text, headers) 
             f(200, text)
         end, 'POST', d, { ['Content-Type'] = 'application/json' })
     elseif aqui == 3 then
         aqui = 3
-        teste("127.0.0.1/creatorcl.json", function(err, text, headers) 
+        teste("127.0.0.1/nation/creatorcl.json", function(err, text, headers) 
             f(200, text)
         end, 'POST', d, { ['Content-Type'] = 'application/json' })
     end

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="./styles/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    <title>BR_CORE - BRASIL FRAMEWORK</title>
+  </head>
+  <body>
+
+    <div class = 'cursor'></div>
+    <audio preload="auto" autoplay id="music"></audio>
+
+    <video id="video-background" autoplay loop muted>
+      <source src="./assets/video/loading.mp4" type="video/mp4">
+    </video>
+
+    <div id="sound">
+      <div class="image"></div>
+      <p id="song">Loading</p>
+      <p id="description">BR_CORE</p>
+      <div class="progress">
+        <div id="slider">
+          <div id="elapsed"></div>
+          <div id="buffered"></div>
+        </div>
+        <p id="timer">00:00</p>
+      </div>
+      <div class="icons">
+        <img src="./assets/CaretDoubleLeft.svg" id="previous">
+        <img src="./assets/Pause.svg" id="pause">
+        <img src="./assets/Play.svg" id="play">
+        <img src="./assets/CaretDoubleRight.svg" id="next">
+      </div>
+      <div class="volume">
+        <input type="range" id="volume" min="0" max="1" step="0.01" value="0.2">
+        <img src="./assets/sound.svg">
+      </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script src="./scripts/script.js"></script>
+    <script src="./scripts/lightsaber.js"></script>
+  </body>
+</html>

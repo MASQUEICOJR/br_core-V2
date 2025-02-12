@@ -174,6 +174,62 @@ CREATE TABLE IF NOT EXISTS `user_vehicles` (
   KEY `vehicle` (`vehicle`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- Copiando estrutura para tabela vrp.orgs_goals
+CREATE TABLE IF NOT EXISTS `orgs_goals` (
+  `user_id` int(11) NOT NULL,
+  `organization` varchar(50) NOT NULL,
+  `item` varchar(100) NOT NULL,
+  `amount` int(11) NOT NULL DEFAULT 0,
+  `day` int(11) NOT NULL,
+  `month` int(11) NOT NULL,
+  `step` int(11) DEFAULT 1,
+  `reward_step` int(11) DEFAULT 0,
+  UNIQUE KEY `user_id_organization_item_day` (`user_id`,`organization`,`item`,`day`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Exportação de dados foi desmarcado.
+
+-- Copiando estrutura para tabela db_clean.orgs_info
+CREATE TABLE IF NOT EXISTS `orgs_info` (
+  `organization` varchar(50) NOT NULL,
+  `alerts` text DEFAULT '{}',
+  `logo` text DEFAULT NULL,
+  `discord` varchar(150) DEFAULT '',
+  `bank` int(11) DEFAULT 0,
+  `bank_historic` text DEFAULT '{}',
+  `permissions` text DEFAULT '{}',
+  `config_goals` text DEFAULT '{}',
+  `salary` int(11) DEFAULT 1000,
+  PRIMARY KEY (`organization`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+-- Exportação de dados foi desmarcado.
+
+-- Copiando estrutura para tabela vrp.orgs_logs
+CREATE TABLE IF NOT EXISTS `orgs_logs` (
+  `organization` varchar(50) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `role` varchar(50) DEFAULT NULL,
+  `name` varchar(50) DEFAULT NULL,
+  `description` varchar(200) DEFAULT NULL,
+  `date` varchar(50) DEFAULT NULL,
+  `expire_at` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Exportação de dados foi desmarcado.
+
+-- Copiando estrutura para tabela vrp.orgs_player_infos
+CREATE TABLE IF NOT EXISTS `orgs_player_infos` (
+  `user_id` int(11) NOT NULL,
+  `organization` varchar(50) DEFAULT NULL,
+  `joindate` int(11) DEFAULT 0,
+  `lastlogin` int(11) DEFAULT 0,
+  `timeplayed` int(11) DEFAULT 0,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+-- Exportação de dados foi desmarcado.
+
 -- Dumping data for table br.user_vehicles: ~0 rows (approximately)
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;

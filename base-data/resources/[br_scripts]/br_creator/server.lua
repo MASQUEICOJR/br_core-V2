@@ -57,7 +57,7 @@ src.finishWhitelist = function(data)
         exports.oxmysql:executeSync(query)
 	end
 
-	BR.execute("BR/update_characters",{ user_id = user_id, name = data.name, firstname = data.surname, idade = data.age })
+	BR.execute("BR/update_user_first_spawn",{ user_id = user_id, name = data.name, firstname = data.surname, idade = data.age })
 	BR.updateIdentity(user_id)
 
 	local uData = BR.getUData(user_id, 'rewardCar') or false

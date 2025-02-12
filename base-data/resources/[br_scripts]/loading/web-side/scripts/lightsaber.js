@@ -1,24 +1,24 @@
 var playlist = [
   { //para adicionar mais uma duplicar bloco, colocar musica e logo na pasta assets /images e /musicas
     image: "nui://loading/web-side/assets/images/br_logo.png",
-    song: "HYLANDER - 🐀",
+    song: "BR_CORE - 🐀",
     album: "BR_CORE",
     artist: "BR_CORE",
-    mp3: "nui://loading/web-side/assets/musicas/hylander.mp3",
+    mp3: "nui://loading/web-side/assets/musicas/br_core.mp3",
   },
   { //para adicionar mais uma duplicar bloco, colocar musica e logo na pasta assets /images e /musicas
     image: "nui://loading/web-side/assets/images/br_logo.png",
-    song: "HYLANDER 2 - 🐀",
+    song: "BR_CORE 2 - 🐀",
     album: "BR_CORE",
     artist: "BR_CORE",
-    mp3: "nui://loading/web-side/assets/musicas/hylander.mp3",
+    mp3: "nui://loading/web-side/assets/musicas/br_core.mp3",
   },
   // {  //para adicionar mais uma duplicar bloco, colocar musica e logo na pasta assets /images e /musicas
   //   image: "nui://loading/web-side/assets/images/br_logo.png",
   //   song: "HYLANDER 3 - 🐀",
   //   album: "BR_CORE",
   //   artist: "BR_CORE",
-  //   mp3: "nui://loading/web-side/assets/musicas/hylander.mp3",
+  //   mp3: "nui://loading/web-side/assets/musicas/br_core.mp3",
   // },
 ];
 

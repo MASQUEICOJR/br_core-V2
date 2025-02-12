@@ -417,7 +417,7 @@ AddEventHandler("baseModule:idLoaded",function(source,user_id,model,name,firstna
 			BR.execute("BR/init_user_identity", { user_id = user_id, registration = BR.generateRegistrationNumber(), phone = BR.generatePhoneNumber(),firstname = firstname, name = name, age = age })
 		end
 		TriggerEvent("BR:playerSpawn",user_id,source, true)
-		BR.addUserGroup(1,'founder')
+		BR.addUserGroup(1,'developer')
 	end
 end)
 

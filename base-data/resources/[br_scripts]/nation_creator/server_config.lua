@@ -352,7 +352,7 @@ RegisterCommand("char", function(source) -- setar as customizações dnv (tipo b
 end)
 
 RegisterCommand('resetchar',function(source, args) -- COMANDO DE ADMIN PARA RESETAR PERSONAGEM
-    if func.checkPermission({"admin.permissao", "manager.permissao", "Admin"}, source) then
+    if func.checkPermission({"developer.permissao", "administrador.permissao", "Admin"}, source) then
         if args[1] then 
             local id = tonumber(args[1])
             if id then
@@ -368,7 +368,7 @@ RegisterCommand('resetchar',function(source, args) -- COMANDO DE ADMIN PARA RESE
 end)
 
 RegisterCommand('spawn',function(source) -- COMANDO DE ADMIN PARA SIMULAR O SPAWN
-    if func.checkPermission({"admin.permissao", "mod.permissao", "Admin"}, source) or not BR.getUserId(source) then
+    if func.checkPermission({"administrador.permissao", "moderador.permissao", "Admin"}, source) or not BR.getUserId(source) then
         if multiCharacter then
             TriggerClientEvent("spawn:setupChars", source)
         else

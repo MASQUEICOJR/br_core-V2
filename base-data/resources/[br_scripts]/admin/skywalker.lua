@@ -11,7 +11,7 @@ IDDclient = Tunnel.getInterface("br_core_admin")
 RegisterCommand('anunciar',function(source,args,rawCommand)
     local user_id = BR.getUserId(source)
     local identity = BR.getUserIdentity(user_id)
-    if BR.hasPermission(user_id,"manager.permission") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") then
+    if BR.hasPermission(user_id,"developer.permisssao") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") then
         local mensagem = BR.prompt(source,"Mensagem:","")
         if mensagem == "" then
             return
@@ -82,7 +82,7 @@ end)
 RegisterCommand('svon',function(source,args,rawCommand)
 	local user_id = BR.getUserId(source)
 	local identity = BR.getUserIdentity(user_id)
-	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
 		Citizen.CreateThread(function()
 			PerformHttpRequest("", function(err, text, headers) end, 'POST', json.encode({
 				content = '||@everyone <@&882047959913603091>||',
@@ -112,7 +112,7 @@ RegisterCommand('renomear',function(source,args,rawCommand)
 	local user_id = BR.getUserId(source)
 	local identity = BR.getUserIdentity(user_id)
 
-    if BR.hasPermission(user_id, "suporte.permissao") or BR.hasPermission(user_id, "moderador.permissao") or BR.hasPermission(user_id, "administrador.permissao") or BR.hasPermission(user_id, "manager.permission") then
+    if  BR.hasPermission(user_id, "moderador.permissao") or BR.hasPermission(user_id, "administrador.permissao") or BR.hasPermission(user_id, "developer.permisssao") then
         local idjogador = BR.prompt(source, "Qual id do jogador?", "")
         local nome = BR.prompt(source, "Novo nome", "")
         local firstname = BR.prompt(source, "Novo sobrenome", "")
@@ -173,7 +173,7 @@ RegisterCommand('vroupas',function(source,args,rawCommand)
     local user_id = BR.getUserId(source)
 	local custom = BRclient.getCustomization(source)
 
-    if BR.hasPermission(user_id, "suporte.permissao") or BR.hasPermission(user_id, "moderador.permissao") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+    if BR.hasPermission(user_id,"staff.permisssao") then
         if player_customs[source] then
             player_customs[source] = nil
             BRclient._removeDiv(source,"customization")
@@ -200,7 +200,7 @@ end
 RegisterCommand('vroupas2', function(source, args, rawCommand)
     local user_id = BR.getUserId(source)
     local custom = BRclient.getCustomization(source)
-    if BR.hasPermission(user_id, "suporte.permissao") or BR.hasPermission(user_id, "moderador.permissao") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+    if BR.hasPermission(user_id,"staff.permisssao") then
           if player_customs[source] then
             player_customs[source] = nil
             BRclient._removeDiv(source,"customization")
@@ -233,7 +233,7 @@ end)
 RegisterCommand('estoque',function(source,args,rawCommand)
 	local user_id = BR.getUserId(source)
 	local identity = BR.getUserIdentity(user_id)
-    if BR.hasPermission(user_id,"manager.permission") then
+    if BR.hasPermission(user_id,"developer.permisssao") then
 		if args[1] and args[2] then
 
 			PerformHttpRequest(config.Stock, function(err, text, headers) end, 'POST', json.encode({
@@ -273,7 +273,7 @@ RegisterCommand('arma',function(source,args,rawCommand)
 	local identity = BR.getUserIdentity(user_id)
     if user_id then
         if args[1] then
-            if BR.hasPermission(user_id,"manager.permission") then
+            if BR.hasPermission(user_id,"developer.permisssao") then
             	BRclient.giveWeapons(source,{[args[1]] = { ammo = 500 }})
 				TriggerClientEvent("Notify",source,"amarelo","Você pergou a arma "..args[1])
 			end
@@ -316,7 +316,7 @@ end
 RegisterCommand('clearinv',function(source,args,rawCommand)
     local user_id = BR.getUserId(source)
     local player = BR.getUserSource(user_id)
-    if BR.hasPermission(user_id,"manager.permission") then
+    if BR.hasPermission(user_id,"developer.permisssao") then
         local tuser_id = tonumber(args[1])
         local tplayer = BR.getUserSource(tonumber(tuser_id))
         local tplayerID = BR.getUserId (tonumber(tplayer))
@@ -358,7 +358,7 @@ BR._prepare("creative/get_users","SELECT * FROM users WHERE id = @user_id")
 RegisterCommand('addcar',function(source,args,rawCommand)
     local user_id = BR.getUserId(source)
     local nplayer = BR.getUserId(parseInt(args[2]))
-    if BR.hasPermission(user_id,"managers.permissao") or BR.hasPermission(user_id,"managers.permissao") then
+    if BR.hasPermission(user_id,"developer.permissao") or BR.hasPermission(user_id,"administrador.permissao") then
         if args[1] and args[2] then
             local nuser_id = BR.getUserId(nplayer)
             local identity = BR.getUserIdentity(user_id)
@@ -375,7 +375,7 @@ RegisterCommand('remcar',function(source,args,rawCommand)
 	local identity = BR.getUserIdentity(user_id)
 	local nplayer = BR.getUserId(parseInt(args[2]))
 
-    if BR.hasPermission(user_id,"manager.permission") then
+    if BR.hasPermission(user_id,"developer.permisssao") then
         if args[1] and args[2] then
             local nuser_id = BR.getUserId(nplayer)
 			local identitynu = BR.getUserIdentity(nuser_id)
@@ -393,7 +393,7 @@ end)
 RegisterCommand('uncuff',function(source,args,rawCommand)
 	local user_id = BR.getUserId(source)
 	if user_id then
-		if BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+		if BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
 			TriggerClientEvent("admcuff",source)
 		end
 	end
@@ -402,7 +402,7 @@ end)
 RegisterCommand('deattach',function(source,args,rawCommand)
 	local user_id = BR.getUserId(source)
 	if user_id then
-		if BR.hasPermission(user_id,"manager.permission") then
+		if BR.hasPermission(user_id,"developer.permisssao") then
 			TriggerClientEvent("deattach",source)
 		end
 	end
@@ -411,7 +411,7 @@ end)
 RegisterCommand('limpararea',function(source,args,rawCommand)
     local user_id = BR.getUserId(source)
     local x,y,z = BRclient.getPosition(source)
-    if BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+    if BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
         TriggerClientEvent("syncarea",-1,x,y,z)
     end
 end)
@@ -420,7 +420,7 @@ RegisterCommand('apagao',function(source,args,rawCommand)
     local user_id = BR.getUserId(source)
     if user_id ~= nil then
         local player = BR.getUserSource(user_id)
-        if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") and args[1] ~= nil then
+        if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"developer.permisssao") and args[1] ~= nil then
             local cond = tonumber(args[1])
             --TriggerEvent("cloud:setApagao",cond)
             TriggerClientEvent("cloud:setApagao",-1,cond)
@@ -432,7 +432,7 @@ RegisterCommand('raios', function(source,args,rawCommand)
     local user_id = BR.getUserId(source)
     if user_id ~= nil then
         local player = BR.getUserSource(user_id)
-        if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") and args[1] ~= nil then
+        if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"developer.permisssao") and args[1] ~= nil then
             local vezes = tonumber(args[1])
             TriggerClientEvent("cloud:raios",-1,vezes)
         end
@@ -456,7 +456,7 @@ RegisterCommand('debug',function(source, args, rawCommand)
 	local user_id = BR.getUserId(source)
 	if user_id ~= nil then
 		local player = BR.getUserSource(user_id)
-		if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+		if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
 			TriggerClientEvent("ToggleDebug",player)
 		end
 	end
@@ -480,7 +480,7 @@ RegisterCommand('fix',function(source,args,rawCommand)
 
 	local vehicle = BRclient.getNearestVehicle(source,11)
 	if vehicle then
-		if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+		if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
 
 			PerformHttpRequest(config.Fix, function(err, text, headers) end, 'POST', json.encode({
 				embeds = {
@@ -513,7 +513,7 @@ RegisterCommand('god',function(source,args,rawCommand)
 	local user_id = BR.getUserId(source)
 	local identity = BR.getUserIdentity(user_id)
 
-    if BR.hasPermission(user_id, "suporte.permissao") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+    if BR.hasPermission(user_id, "suporte.permissao") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
         if args[1] then
 			local nplayer = BR.getUserSource(parseInt(args[1]))
 			if nplayer then
@@ -551,7 +551,7 @@ end)
 RegisterCommand('godall',function(source,args,rawCommand)
 	local user_id = BR.getUserId(source)
 	local identity = BR.getUserIdentity(user_id)
-    if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+    if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
     	local users = BR.getUsers()
         for k,v in pairs(users) do
             local id = BR.getUserSource(parseInt(k))
@@ -590,14 +590,14 @@ end)
 
 RegisterCommand('hash',function(source,args,rawCommand)
 	local user_id = BR.getUserId(source)
-	if BR.hasPermission(user_id,"manager.permission") then
+	if BR.hasPermission(user_id,"developer.permisssao") then
 		TriggerClientEvent('vehash',source)
 	end
 end)
 
 RegisterCommand('tuning',function(source,args,rawCommand)
 	local user_id = BR.getUserId(source)
-	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
 		TriggerClientEvent('vehtuning',source)
 	end
 end)
@@ -605,7 +605,7 @@ end)
 RegisterCommand('wl',function(source,args,rawCommand)
     local user_id = BR.getUserId(source)
     local identity = BR.getUserIdentity(user_id)
-    if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"suporte.permissao") or BR.hasPermission(user_id,"manager.permission") or BR.hasPermission(user_id,"aprovador-wl.permissao") then
+    if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"suporte.permissao") or BR.hasPermission(user_id,"developer.permisssao") or BR.hasPermission(user_id,"aprovador-wl.permissao") then
 		if args[1] then
             BR.setWhitelisted(args[1],true)
             TriggerClientEvent("Notify",source,"sucesso","Você aprovou o passaporte <b>"..args[1].."</b> na whitelist.")
@@ -618,7 +618,7 @@ end)
 RegisterCommand('unwl',function(source,args,rawCommand)
 	local user_id = BR.getUserId(source)
 	local identity = BR.getUserIdentity(user_id)
-	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"suporte.permissao") or BR.hasPermission(user_id,"manager.permission") then
+	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"suporte.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
 		if args[1] then
 			BR.setWhitelisted(args[1],false)
 			TriggerClientEvent("Notify",source,"sucesso","Você retirou o passaporte <b>"..args[1].."</b> da whitelist.")
@@ -633,7 +633,7 @@ end)
 RegisterCommand('kick',function(source,args,rawCommand)
 	local user_id = BR.getUserId(source)
 	local identity = BR.getUserIdentity(user_id)
-	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
 		if args[1] then
 			local id = BR.getUserSource(parseInt(args[1]))
 			if id then
@@ -654,7 +654,7 @@ RegisterCommand('kickall',function(source,args,rawCommand)
 	local user_id = BR.getUserId(source)
 	local identity = BR.getUserIdentity(user_id)
 
-    if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+    if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
         local users = BR.getUsers()
         for k,v in pairs(users) do
             local id = BR.getUserSource(parseInt(k))
@@ -689,7 +689,7 @@ end)
 
 RegisterCommand('kickbugados',function(source,args,rawCommand)
     local user_id = BR.getUserId(source)
-    if BR.hasPermission(user_id,"admin.permissao")then
+    if BR.hasPermission(user_id,"administrador.permissao")then
         TriggerClientEvent('MQCU:bugado',-1)
     end
 end)
@@ -708,7 +708,7 @@ end)
 RegisterCommand("kicksrc",function(source,args,command)
   local user_id = BR.getUserId(source)
   if user_id then
-	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
       DropPlayer(args[1],"VOCE FOI KIKADO!")
     end
   end
@@ -717,7 +717,7 @@ end)
 local webhookbansrc = "WEBHOOKAQUI"
 RegisterCommand('bansrc',function(source,args,command)
   local user_id = BR.getUserId(source)
-  if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+  if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
     local nsource = args[1]
     if(nsource)then
       local identifiers = {}
@@ -763,7 +763,7 @@ end
 RegisterCommand('ban',function(source,args,rawCommand)
 	local user_id = BR.getUserId(source)
 	local identity = BR.getUserIdentity(user_id)
-	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
 		if args[1] then
 			local motivo = BR.prompt(source,"Digite um motivo:","")
 			if motivo or motivo ~= "" then
@@ -817,7 +817,7 @@ end)
 RegisterCommand('unban',function(source,args,rawCommand)
 	local user_id = BR.getUserId(source)
 	local identity = BR.getUserIdentity(user_id)
-	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
 		if args[1] then
 			BR.setBanned(parseInt(args[1]),false)
 			TriggerClientEvent("Notify",source,"sucesso","Voce desbaniu o passaporte <b>"..args[1].."</b> da cidade.")
@@ -855,7 +855,7 @@ end)
 RegisterCommand('nc',function(source,args,rawCommand)
 	local user_id = BR.getUserId(source)
 	local identity = BR.getUserIdentity(user_id)
-	if BR.hasPermission(user_id, "lider-corretor.permissao") or BR.hasPermission(user_id, "suporte.permissao") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+	if BR.hasPermission(user_id, "lider-corretor.permissao") or BR.hasPermission(user_id, "suporte.permissao") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
 
 		BRclient.toggleNoclip(source)
 		local identity = BR.getUserIdentity(user_id)
@@ -865,7 +865,7 @@ end)
 
 RegisterCommand('tpcds',function(source,args,rawCommand)
 	local user_id = BR.getUserId(source)
-	if BR.hasPermission(user_id, "suporte.permissao") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+	if BR.hasPermission(user_id, "suporte.permissao") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
 		local fcoords = BR.prompt(source,"Cordenadas:","")
 		if fcoords == "" then
 			return
@@ -880,7 +880,7 @@ end)
 
 RegisterCommand('cds',function(source,args,rawCommand)
 	local user_id = BR.getUserId(source)
-	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
 		local x,y,z = BRclient.getPosition(source)
 		BR.prompt(source,"Cordenadas:","['x'] = "..tD(x)..", ['y'] = "..tD(y)..", ['z'] = "..tD(z))
 	end
@@ -888,7 +888,7 @@ end)
 
 RegisterCommand('cds2',function(source,args,rawCommand)
 	local user_id = BR.getUserId(source)
-	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
 		local x,y,z = BRclient.getPosition(source)
 		BR.prompt(source,"Cordenadas:",tD(x)..", "..tD(y)..", "..tD(z))
 	end
@@ -896,7 +896,7 @@ end)
 
 RegisterCommand('cds3',function(source,args,rawCommand)
 	local user_id = BR.getUserId(source)
-	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
 		local x,y,z = BRclient.getPosition(source)
 		BR.prompt(source,"Cordenadas:","{name='ATM', id=277, x="..tD(x)..", y="..tD(y)..", z="..tD(z).."},")
 	end
@@ -904,7 +904,7 @@ end)
 
 RegisterCommand('cds4',function(source,args,rawCommand)
 	local user_id = BR.getUserId(source)
-	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
 		local x,y,z = BRclient.getPosition(source)
 		BR.prompt(source,"Cordenadas:","x = "..tD(x)..", y = "..tD(y)..", z = "..tD(z))
 	end
@@ -913,7 +913,7 @@ end)
 RegisterCommand('reselect',function(source,args,rawCommand)
 	local source = source
 	local user_id = BR.getUserId(source)
-	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
 		if user_id then
 			BR.rejoinServer(source)
 			Citizen.Wait(1000)
@@ -926,7 +926,7 @@ end)
 	local user_id = BR.getUserId(source)
 	local identity = BR.getUserIdentity(user_id)
 	local nplayer = BR.getUserSource(parseInt(args[1]))
-	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
 		if args[1] and args[2] then
 			BR.addUserGroup(parseInt(args[1]),args[2])
 			TriggerClientEvent("Notify",source,"sucesso","Voce setou o passaporte <b>"..parseInt(args[1]).."</b> no grupo <b>"..args[2].."</b>.")
@@ -947,7 +947,7 @@ BR.prepare("system/getoff","SELECT dvalue FROM user_data WHERE dkey = 'BR:datata
 RegisterCommand('ungroup',function(source,args,rawCommand)
     local user_id = BR.getUserId(source)
     local identity = BR.getUserIdentity(user_id)
-	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") or BR.hasPermission(user_id,"moderador.permissao") then
+	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"developer.permisssao") or BR.hasPermission(user_id,"moderador.permissao") then
         if args[1] and args[2] then
 			if checkSetGroup(user_id, args[2]) then
 				local nplayer = BR.getUserSource(parseInt(args[1]))
@@ -1023,7 +1023,7 @@ RegisterCommand('group',function(source,args,rawCommand)
 	else
 		local user_id = BR.getUserId(source)
 		local identity = BR.getUserIdentity(user_id)
-		if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"suporte.permissao")  then
+		if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"developer.permisssao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"suporte.permissao")  then
 			if args[1] and args[2] then
 				if checkSetGroup(user_id, args[2]) then 
 					local nplayer = BR.getUserSource(parseInt(args[1]))
@@ -1052,7 +1052,7 @@ end)
 RegisterCommand('anunciar',function(source,args,rawCommand)
     local user_id = BR.getUserId(source)
     local identity = BR.getUserIdentity(user_id)
-    if BR.hasPermission(user_id,"manager.permission") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") then
+    if BR.hasPermission(user_id,"developer.permisssao") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") then
         local mensagem = BR.prompt(source,"Mensagem:","")
         if mensagem == "" then
             return
@@ -1081,7 +1081,7 @@ end)
 
 RegisterCommand('festinha',function(source,args,rawCommand)
     local user_id = BR.getUserId(source)
-    if BR.hasPermission(user_id,"manager.permission") then
+    if BR.hasPermission(user_id,"developer.permisssao") then
         local identity = BR.getUserIdentity(user_id)
         local mensagem = BR.prompt(source,"Mensagem:","")
         if mensagem == "" then
@@ -1123,7 +1123,7 @@ end)
 RegisterCommand('tptome',function(source,args,rawCommand)
 	local user_id = BR.getUserId(source)
 	local identity = BR.getUserIdentity(user_id)
-	if BR.hasPermission(user_id, "suporte.permissao") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+	if BR.hasPermission(user_id, "suporte.permissao") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
 		if args[1] then
 			local tplayer = BR.getUserSource(parseInt(args[1]))
 			local x,y,z = BRclient.getPosition(source)
@@ -1142,7 +1142,7 @@ end)
 RegisterCommand('tpto',function(source,args,rawCommand)
 	local user_id = BR.getUserId(source)
 	local identity = BR.getUserIdentity(user_id)
-	if BR.hasPermission(user_id, "suporte.permissao") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+	if BR.hasPermission(user_id, "suporte.permissao") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
 		if args[1] then
 			local tplayer = BR.getUserSource(parseInt(args[1]))
 			if tplayer then
@@ -1161,7 +1161,7 @@ RegisterCommand('tpway',function(source,args,rawCommand)
 	local user_id = BR.getUserId(source)
 	local identity = BR.getUserIdentity(user_id)
 
-	if BR.hasPermission(user_id, "suporte.permissao") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+	if BR.hasPermission(user_id, "suporte.permissao") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
 
 		TriggerClientEvent('tptoway',source)
 		local identity = BR.getUserIdentity(user_id)
@@ -1187,7 +1187,7 @@ local itemlist = {
 
 RegisterCommand('arma',function(source,args,rawCommand)
     local user_id = BR.getUserId(source)
-    if BR.hasPermission(user_id,"manager.permission") then
+    if BR.hasPermission(user_id,"developer.permisssao") then
         if args[1] then
             for k,v in pairs(itemlist) do
                 if v.arg == args[1] then
@@ -1201,14 +1201,14 @@ end)
 
 RegisterCommand('delnpcs',function(source,args,rawCommand)
 	local user_id = BR.getUserId(source)
-	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"manager.permission") then
+	if BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"developer.permisssao") then
 		TriggerClientEvent('delnpcs',source)
 	end
 end)
 
 RegisterCommand('pon',function(source,args,rawCommand)
     local user_id = BR.getUserId(source)
-    if BR.hasPermission(user_id,"manager.permission") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"suporte.permissao") then
+    if BR.hasPermission(user_id,"developer.permisssao") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"suporte.permissao") then
         local users = BR.getUsers()
         local players = ""
 		local quantidade = 0
@@ -1230,7 +1230,7 @@ end)
 function BRidd.getPermissao()
 	local source = source
 	local user_id = BR.getUserId(source)
-	if BR.hasPermission(user_id,"manager.permission") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"suporte.permissao") then
+	if BR.hasPermission(user_id,"developer.permisssao") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"suporte.permissao") then
 		return true
 	else
 		return false
@@ -1240,7 +1240,7 @@ end
 RegisterCommand('ids',function(source,args,rawCommand)
 	local source = source
 	local user_id = BR.getUserId(source)
-	if BR.hasPermission(user_id,"manager.permission") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"suporte.permissao") then
+	if BR.hasPermission(user_id,"developer.permisssao") or BR.hasPermission(user_id,"administrador.permissao") or BR.hasPermission(user_id,"moderador.permissao") or BR.hasPermission(user_id,"suporte.permissao") then
 		TriggerClientEvent("mostrarid",source)
 	end
 end)
@@ -1284,14 +1284,14 @@ RegisterCommand('staff',function(source,args,rawCommand)
 	local cargo = nil
 	local status = nil
 
-	if BR.hasPermission(user_id,"manager.permission") then
+	if BR.hasPermission(user_id,"developer.permisssao") then
 		cargo = "Manager"
 		status = "Saiu do modo administrativo."
 		BR.addUserGroup(user_id,"off-manager")
 		TriggerClientEvent("Notify",source,"negado","<b>[MANAGER]</b> OFF.")
 		TriggerEvent('eblips:remove',source)
 
-	elseif BR.hasPermission(user_id,"off-manager.permission") then
+	elseif BR.hasPermission(user_id,"off-developer.permisssao") then
 		cargo = "Manager"
 		status = "Entrou no modo administrativo."
 		BR.addUserGroup(user_id,"manager")
@@ -1381,9 +1381,9 @@ RegisterCommand("plano", function(source,args)
 	local source = source
 	local user_id = BR.getUserId(source)
 	if args[1] == "add" then
-		if BR.hasPermission(user_id,"manager.permission") or BR.hasPermission(user_id,"administrador.permissao") then
+		if BR.hasPermission(user_id,"developer.permisssao") or BR.hasPermission(user_id,"administrador.permissao") then
 			if BR.getUserSource(tonumber(args[2])) then
-				if BR.hasPermission(user_id,"manager.permission") or BR.hasPermission(user_id,"administrador.permissao") then
+				if BR.hasPermission(user_id,"developer.permisssao") or BR.hasPermission(user_id,"administrador.permissao") then
 					local consulta = BR.getUData(tonumber(args[2]),"BR:plano")
 					local resultado = json.decode(consulta) or {}
 					resultado.tempo = (resultado.tempo or 0)+tonumber(args[3])*1440
@@ -1421,12 +1421,12 @@ RegisterCommand("vip", function(source,args)
 	local nuser_id = parseInt(args[2])
 	if args[1] == "add" then
 		local vip = args[3]
-		if BR.hasPermission(user_id,"manager.permission") or BR.hasPermission(user_id,"administrador.permissao") then
+		if BR.hasPermission(user_id,"developer.permisssao") or BR.hasPermission(user_id,"administrador.permissao") then
 			if vip == "ultimate" then
 				BR.addUserGroup(nuser_id,"ultimate")
 				TriggerClientEvent("Notify", source, "sucesso","ID "..args[1].." setado de Ultimate pass.")
 				if BR.getUserSource(tonumber(args[2])) then
-					if BR.hasPermission(user_id,"manager.permission") or BR.hasPermission(user_id,"administrador.permissao") then
+					if BR.hasPermission(user_id,"developer.permisssao") or BR.hasPermission(user_id,"administrador.permissao") then
 						local consulta = BR.getUData(tonumber(args[2]),"BR:vip")
 						local resultado = json.decode(consulta) or {}
 						resultado.tempo = (resultado.tempo or 0)+tonumber(args[4])*1440
@@ -1438,7 +1438,7 @@ RegisterCommand("vip", function(source,args)
 				BR.addUserGroup(nuser_id,"platinum")
 				TriggerClientEvent("Notify", source, "sucesso","ID "..args[1].." setado de Platina pass.")
 				if BR.getUserSource(tonumber(args[2])) then
-					if BR.hasPermission(user_id,"manager.permission") or BR.hasPermission(user_id,"administrador.permissao") then
+					if BR.hasPermission(user_id,"developer.permisssao") or BR.hasPermission(user_id,"administrador.permissao") then
 						local consulta = BR.getUData(tonumber(args[2]),"BR:vip")
 						local resultado = json.decode(consulta) or {}
 						resultado.tempo = (resultado.tempo or 0)+tonumber(args[4])*1440
@@ -1450,7 +1450,7 @@ RegisterCommand("vip", function(source,args)
 				BR.addUserGroup(nuser_id,"gold")
 				TriggerClientEvent("Notify", source, "sucesso","ID "..args[1].." setado de Ouro pass.")
 				if BR.getUserSource(tonumber(args[2])) then
-					if BR.hasPermission(user_id,"manager.permission") or BR.hasPermission(user_id,"administrador.permissao") then
+					if BR.hasPermission(user_id,"developer.permisssao") or BR.hasPermission(user_id,"administrador.permissao") then
 						local consulta = BR.getUData(tonumber(args[2]),"BR:vip")
 						local resultado = json.decode(consulta) or {}
 						resultado.tempo = (resultado.tempo or 0)+tonumber(args[4])*1440
@@ -1462,7 +1462,7 @@ RegisterCommand("vip", function(source,args)
 				BR.addUserGroup(nuser_id,"standard")
 				TriggerClientEvent("Notify", source, "sucesso","ID "..args[1].." setado de Standard pass.")
 				if BR.getUserSource(tonumber(args[2])) then
-					if BR.hasPermission(user_id,"manager.permission") or BR.hasPermission(user_id,"administrador.permissao") then
+					if BR.hasPermission(user_id,"developer.permisssao") or BR.hasPermission(user_id,"administrador.permissao") then
 						local consulta = BR.getUData(tonumber(args[2]),"BR:vip")
 						local resultado = json.decode(consulta) or {}
 						resultado.tempo = (resultado.tempo or 0)+tonumber(args[4])*1440
@@ -1475,7 +1475,7 @@ RegisterCommand("vip", function(source,args)
 		end
 	elseif args[1] == "rem" then
 		if BR.getUserSource(tonumber(args[2])) then
-			if BR.hasPermission(BR.getUserId(source),"manager.permission") or BR.hasPermission(BR.getUserId(source),"administrador.permissao") then
+			if BR.hasPermission(BR.getUserId(source),"developer.permisssao") or BR.hasPermission(BR.getUserId(source),"administrador.permissao") then
 				local consulta = BR.getUData(tonumber(args[2]),"BR:vip")
 				local resultado = json.decode(consulta) or {}
 				resultado.tempo = (resultado.tempo or 0)-tonumber(args[3])*1440

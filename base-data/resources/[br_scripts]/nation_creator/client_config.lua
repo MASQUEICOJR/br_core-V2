@@ -869,7 +869,7 @@ function cutScene() -- ORDER CREATION
 	
 	NewLoadSceneStartSphere(-1212.79, -1673.52, 7, 1000, 0) ----- avoid texture bugs
     -----------------------------------------------
-    inCutscene = true
+    inCutscene = false
     CreateThread(setWeather) ---- SUN TIME
     StartCutscene(4) --- START the custscene
     CreateThread(function()

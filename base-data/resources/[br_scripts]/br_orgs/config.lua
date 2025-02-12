@@ -52,208 +52,8 @@ Config.defaultPermissions = {
 Config.Groups = {
 
     -- Continue com a mesma estrutura para cada zona até o zona 40
-    ['zona1'] = { ---------------- ARMAS --------------------
-        Config = {
-            Salary = { -- SALARIO FAC
-                active = false, -- Se vai esta ativo ou nao
-                amount = 20000, -- Valor que vai receber
-                time = 10, -- tempo em tempo que vai receber salario em minuto(s)
-            },
 
-            Goals = { -- METAS
-                defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
-                itens = {
-                    ['sementedemaconha'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                    ['adubo'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                }
-            }
-        },
-
-        List = {
-            ['zona3L'] = {
-                prefix = 'Lider',
-                tier = 1
-            },
-            ['zona3G'] = {
-                prefix = 'Gerente',
-                tier = 2
-            },
-            ['zona3'] = {
-                prefix = 'Membro',
-                tier = 3
-            },
-        }
-    },
-
-    ['zona2'] = { --------------LAVAGEM--------------------------
-        Config = {
-            Salary = { -- SALARIO FAC
-                active = false, -- Se vai esta ativo ou nao
-                amount = 50000, -- Valor que vai receber
-                time = 10, -- tempo em tempo que vai receber salario em minuto(s)
-            },
-
-            Goals = { -- METAS
-                defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
-                itens = {
-                    ['dietilamida'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                    ['nitratoamonia'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                }
-            }
-        },
-
-        List = {
-            ['zona6L'] = {
-                prefix = 'Lider',
-                tier = 1
-            },
-            ['zona6G'] = {
-                prefix = 'Gerente',
-                tier = 2
-            },
-            ['zona6'] = {
-                prefix = 'Membro',
-                tier = 3
-            },
-        }
-    },
-
-    ['zona3'] = { ---------------- MUNICAO -------------------
-        Config = {
-            Salary = { -- SALARIO FAC
-                active = false, -- Se vai esta ativo ou nao
-                amount = 50000, -- Valor que vai receber
-                time = 10, -- tempo em tempo que vai receber salario em minuto(s)
-            },
-
-            Goals = { -- METAS
-                defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
-                itens = {
-                    ['polvora'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                }
-            }
-        },
-
-        List = {
-            ['zona18L'] = {
-                prefix = 'Lider',
-                tier = 1
-            },
-            ['zona18G'] = {
-                prefix = 'Gerente',
-                tier = 2
-            },
-            ['zona18'] = {
-                prefix = 'Membro',
-                tier = 3
-            },
-        }
-    },
-
-    ['zona4'] = { ---------------- CONTRABANDO -------------------
-        Config = {
-            Salary = { -- SALARIO FAC
-                active = false, -- Se vai esta ativo ou nao
-                amount = 50000, -- Valor que vai receber
-                time = 10, -- tempo em tempo que vai receber salario em minuto(s)
-            },
-
-            Goals = { -- METAS
-                defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
-                itens = {
-                    ['pano'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                    ['linha'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                    ['plastico'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                    ['placaeletronica'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                    ['papel'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                    ['coladesapateiro'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                    ['nitrox'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                }
-            }
-        },
-
-        List = {
-            ['zona19L'] = {
-                prefix = 'Lider',
-                tier = 1
-            },
-            ['zona19G'] = {
-                prefix = 'Gerente',
-                tier = 2
-            },
-            ['zona19'] = {
-                prefix = 'Membro',
-                tier = 3
-            },
-        }
-    },
-
-    ['zona5'] = { -------------DESMANCHE---------------
-        Config = {
-            Salary = { -- SALARIO FAC
-                active = false, -- Se vai esta ativo ou nao
-                amount = 50000, -- Valor que vai receber
-                time = 10, -- tempo em tempo que vai receber salario em minuto(s)
-            },
-
-            Goals = { -- METAS
-                defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
-                itens = {
-                    ['opio'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                }
-            }
-        },
-
-        List = {
-            ['zona23L'] = {
-                prefix = 'Lider',
-                tier = 1
-            },
-            ['zona23G'] = {
-                prefix = 'Gerente',
-                tier = 2
-            },
-            ['zona23'] = {
-                prefix = 'Membro',
-                tier = 3
-            },
-        }
-    },
-
-    ['zona6'] = { --------------DROGAS----------------
-        Config = {
-            Salary = { -- SALARIO FAC
-                active = false, -- Se vai esta ativo ou nao
-                amount = 50000, -- Valor que vai receber
-                time = 10, -- tempo em tempo que vai receber salario em minuto(s)
-            },
-
-            Goals = { -- METAS
-                defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
-                itens = {
-                    ['pecadearma'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                    ['mola'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                }
-            }
-        },
-
-        List = {
-            ['zona26L'] = {
-                prefix = 'Lider',
-                tier = 1
-            },
-            ['zona26G'] = {
-                prefix = 'Gerente',
-                tier = 2
-            },
-            ['zona26'] = {
-                prefix = 'Membro',
-                tier = 3
-            },
-        }
-    },
-
-    ['zona30'] = { --------------arma----------------
+    ['Mafia01'] = { --------------ARMAS----------------
         Config = {
             Salary = { -- SALARIO FAC
                 active = false, -- Se vai esta ativo ou nao
@@ -271,22 +71,117 @@ Config.Groups = {
         },
 
         List = {
-            ['zona30L'] = {
-                prefix = 'Lider',
-                tier = 1
-            },
-            ['zona30G'] = {
-                prefix = 'Gerente',
-                tier = 2
-            },
-            ['zona30'] = {
-                prefix = 'Membro',
-                tier = 3
-            },
+            ['Lider [MAFIA01]'] = { prefix = 'Lider', tier = 1 },
+            ['Sub-Lider [MAFIA01]'] = { prefix = 'Gerente', tier = 2 },
+            ['Gerente [MAFIA01]'] = { prefix = 'Membro', tier = 3 },
+            ['Membro [MAFIA01]'] = { prefix = 'Membro', tier = 4 },
+            ['Novato [MAFIA01]'] = { prefix = 'Membro', tier = 5 },
         }
     },
 
-    ['zona32'] = { ------------drogas----------------
+    ['Yakuza'] = { ---------------- MUNICAO -------------------
+    Config = {
+        Salary = { -- SALARIO FAC
+            active = false, -- Se vai esta ativo ou nao
+            amount = 50000, -- Valor que vai receber
+            time = 10, -- tempo em tempo que vai receber salario em minuto(s)
+        },
+
+        Goals = { -- METAS
+            defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
+            itens = {
+                ['polvora'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
+            }
+        }
+    },
+
+    List = {
+        ['Lider [YAKUZA]'] = { prefix = 'Lider', tier = 1 },
+        ['Sub-Lider [YAKUZA]'] = { prefix = 'Gerente', tier = 2 },
+        ['Gerente [YAKUZA]'] = { prefix = 'Membro', tier = 3 },
+        ['Membro [YAKUZA]'] = { prefix = 'Membro', tier = 4 },
+        ['Novato [YAKUZA]'] = { prefix = 'Membro', tier = 5 },
+        }
+    },
+
+    ['Furious'] = { -------------DESMANCHE---------------
+    Config = {
+        Salary = { -- SALARIO FAC
+            active = false, -- Se vai esta ativo ou nao
+            amount = 50000, -- Valor que vai receber
+            time = 10, -- tempo em tempo que vai receber salario em minuto(s)
+        },
+
+        Goals = { -- METAS
+            defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
+            itens = {
+                ['opio'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
+            }
+        }
+    },
+
+        List = {
+            ['Lider [FURIOUS]'] = { prefix = 'Lider', tier = 1 },
+            ['Sub-Lider [FURIOUS]'] = { prefix = 'Gerente', tier = 2 },
+            ['Gerente [FURIOUS]'] = { prefix = 'Membro', tier = 3 },
+            ['Membro [FURIOUS]'] = { prefix = 'Membro', tier = 4 },
+            ['Novato [FURIOUS]'] = { prefix = 'Membro', tier = 5 },
+        }
+    },
+
+    ['Vanilla'] = { --------------LAVAGEM--------------------------
+    Config = {
+        Salary = { -- SALARIO FAC
+            active = false, -- Se vai esta ativo ou nao
+            amount = 50000, -- Valor que vai receber
+            time = 10, -- tempo em tempo que vai receber salario em minuto(s)
+        },
+
+        Goals = { -- METAS
+            defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
+            itens = {
+                ['dietilamida'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
+                ['nitratoamonia'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
+            }
+        }
+    },
+
+        List = {
+            ['Lider [VANILLA]'] = { prefix = 'Lider', tier = 1 },
+            ['Sub-Lider [VANILLA]'] = { prefix = 'Gerente', tier = 2 },
+            ['Gerente [VANILLA]'] = { prefix = 'Membro', tier = 3 },
+            ['Membro [VANILLA]'] = { prefix = 'Membro', tier = 4 },
+            ['Novato [VANILLA]'] = { prefix = 'Membro', tier = 5 },
+        }
+    },
+
+    ['Canada'] = { --------------DROGAS----------------
+    Config = {
+        Salary = { -- SALARIO FAC
+            active = false, -- Se vai esta ativo ou nao
+            amount = 50000, -- Valor que vai receber
+            time = 10, -- tempo em tempo que vai receber salario em minuto(s)
+        },
+
+        Goals = { -- METAS
+            defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
+            itens = {
+                ['pecadearma'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
+                ['mola'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
+            }
+        }
+    },
+
+        List = {
+            ['Lider [CANADA]'] = { prefix = 'Lider', tier = 1 },
+            ['Sub-Lider [CANADA]'] = { prefix = 'Gerente', tier = 2 },
+            ['Gerente [CANADA]'] = { prefix = 'Membro', tier = 3 },
+            ['Membro [CANADA]'] = { prefix = 'Membro', tier = 4 },
+            ['Novato [CANADA]'] = { prefix = 'Membro', tier = 5 },
+        }
+    },
+
+    ['Mecanica'] = { --------------MECANICA----------------
         Config = {
             Salary = { -- SALARIO FAC
                 active = false, -- Se vai esta ativo ou nao
@@ -297,25 +192,43 @@ Config.Groups = {
             Goals = { -- METAS
                 defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
                 itens = {
-                     ['acidosulfurico'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                     ['adubo'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
+                    -- ['polvora'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
                 }
             }
         },
 
         List = {
-            ['zona32L'] = {
-                prefix = 'Lider',
-                tier = 1
+            ['Lider [MECANICA]'] = { prefix = 'Lider', tier = 1 },
+            ['Sub-Lider [MECANICA]'] = { prefix = 'Sub-Lider', tier = 2 },
+            ['Gerente [MECANICA]'] = { prefix = 'Gerente', tier = 3 },
+            ['Membro [MECANICA]'] = { prefix = 'Membro', tier = 4 },
+            ['Novato [MECANICA]'] = { prefix = 'Novato', tier = 5 },
+        }
+    },
+
+    ['Hospital'] = {
+        Config = {
+            Salary = { -- SALARIO FAC
+                active = false, -- Se vai esta ativo ou nao
+                amount = 50000, -- Valor que vai receber
+                time = 10, -- tempo em tempo que vai receber salario em minuto(s)
             },
-            ['zona32G'] = {
-                prefix = 'Gerente',
-                tier = 2
-            },
-            ['zona32'] = {
-                prefix = 'Membro',
-                tier = 3
-            },
+
+            Goals = { -- METAS
+                defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
+                itens = {
+                    -- ['polvora'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
+                }
+            }
+        },
+        List = {
+            ['Diretor'] = { prefix = 'Diretor', tier = 1 },
+            ['Vice Diretor'] = { prefix = 'Vice Diretor', tier = 2 },
+            ['Gestao'] = { prefix = 'Gestao', tier = 4 },
+            ['Psicologo'] = { prefix = 'Psicologo', tier = 5 },
+            ['Medico'] = { prefix = 'Medico', tier = 6 },
+            ['Enfermeiro'] = { prefix = 'Enfermeiro', tier = 7 },
+            ['Paramedico'] = { prefix = 'Paramedico', tier = 8 },
         }
     },
 
@@ -389,178 +302,6 @@ Config.Groups = {
         }
     },
 
-    ['MetaNews'] = {
-        Config = {
-            Salary = { -- SALARIO FAC
-                active = false, -- Se vai esta ativo ou nao
-                amount = 50000, -- Valor que vai receber
-                time = 10, -- tempo em tempo que vai receber salario em minuto(s)
-            },
-
-            Goals = { -- METAS
-                defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
-                itens = {
-                    -- ['polvora'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                }
-            }
-        },
-
-        List = {
-            ['DiretorJornal'] = {
-                prefix = 'Diretor',
-                tier = 1
-            },
-            ['Reporter'] = {
-                prefix = 'Reporter',
-                tier = 2
-            },
-        }
-    },
-
-    ['Cats'] = {
-        Config = {
-            Salary = { -- SALARIO FAC
-                active = false, -- Se vai esta ativo ou nao
-                amount = 50000, -- Valor que vai receber
-                time = 10, -- tempo em tempo que vai receber salario em minuto(s)
-            },
-
-            Goals = { -- METAS
-                defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
-                itens = {
-                    -- ['polvora'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                }
-            }
-        },
-
-        List = {
-            ['donocats'] = {
-                prefix = 'Dono',
-                tier = 1
-            },
-            ['gerentecats'] = {
-                prefix = 'Gerente',
-                tier = 2
-            },
-            ['funcionariocats'] = {
-                prefix = 'Funcionario',
-                tier = 3
-            },
-        }
-    },
-
-    ['Prefeitura'] = {
-        Config = {
-            Salary = { -- SALARIO FAC
-                active = false, -- Se vai esta ativo ou nao
-                amount = 50000, -- Valor que vai receber
-                time = 10, -- tempo em tempo que vai receber salario em minuto(s)
-            },
-
-            Goals = { -- METAS
-                defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
-                itens = {
-                    -- ['polvora'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                }
-            }
-        },
-
-        List = {
-            ['prefeita'] = {
-                prefix = 'Prefeita',
-                tier = 1
-            },
-            ['secretarioprefeitura'] = {
-                prefix = 'Secretario',
-                tier = 2
-            },
-            ['governador'] = {
-                prefix = 'Governador',
-                tier = 3
-            },
-        }
-    },
-
-    ['Mecanica2'] = {
-        Config = {
-            Salary = { -- SALARIO FAC
-                active = false, -- Se vai esta ativo ou nao
-                amount = 50000, -- Valor que vai receber
-                time = 10, -- tempo em tempo que vai receber salario em minuto(s)
-            },
-
-            Goals = { -- METAS
-                defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
-                itens = {
-                    -- ['polvora'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                }
-            }
-        },
-
-        List = {
-            ['MecDiretor2'] = {
-                prefix = 'Diretor',
-                tier = 1
-            },
-            ['MecGerente2'] = {
-                prefix = 'Gerente',
-                tier = 2
-            },
-            ['Mecanico2'] = {
-                prefix = 'Mecanico',
-                tier = 3
-            },
-            ['MecJunior2'] = {
-                prefix = 'Mecanico Junior',
-                tier = 4
-            },
-        }
-    },
-
-    ['Mecanica'] = {
-        Config = {
-            Salary = { -- SALARIO FAC
-                active = false, -- Se vai esta ativo ou nao
-                amount = 50000, -- Valor que vai receber
-                time = 10, -- tempo em tempo que vai receber salario em minuto(s)
-            },
-
-            Goals = { -- METAS
-                defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
-                itens = {
-                    -- ['polvora'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                }
-            }
-        },
-
-        List = {
-            ['Lider [Mecanica]'] = {
-                prefix = 'Lider',
-                tier = 1
-            },
-            ['Sub-Lider [Mecanica]'] = {
-                prefix = 'Sub-Lider',
-                tier = 2
-            },
-            ['Gerente [Mecanica]'] = {
-                prefix = 'Gerente',
-                tier = 3
-            },
-            ['Membro [Mecanica]'] = {
-                prefix = 'Membro',
-                tier = 4
-            },
-            ['Novato [Mecanica]'] = {
-                prefix = 'Novato',
-                tier = 5
-            },
-            ['Recrutador [Mecanica]'] = {
-                prefix = 'Recrutador',
-                tier = 6
-            },
-        }
-    },
-
     ['Vip'] = {
         Config = {
             Salary = { -- SALARIO FAC
@@ -585,110 +326,6 @@ Config.Groups = {
         }
     },
 
-    ['Bombeiro'] = {
-        Config = {
-            Salary = { -- SALARIO FAC
-                active = false, -- Se vai esta ativo ou nao
-                amount = 50000, -- Valor que vai receber
-                time = 10, -- tempo em tempo que vai receber salario em minuto(s)
-            },
-
-            Goals = { -- METAS
-                defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
-                itens = {
-                    -- ['polvora'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                }
-            }
-        },
-
-        List = {
-            ['CmdBombeiro'] = {
-                prefix = 'Comandante',
-                tier = 1
-            },
-            ['Majorbm'] = {
-                prefix = 'Major',
-                tier = 2
-            },
-            ['Capitaobm'] = {
-                prefix = 'Capitao',
-                tier = 3
-            },
-            ['Subtenentebm'] = {
-                prefix = 'Sub Tenente',
-                tier = 4
-            },
-            ['Sargentobm'] = {
-                prefix = 'Sargento',
-                tier = 5
-            },
-            ['Cabobm'] = {
-                prefix = 'Cabo',
-                tier = 6
-            },
-            ['Soldadobm'] = {
-                prefix = 'Soldado',
-                tier = 7
-            },
-            ['Paramedicobm'] = {
-                prefix = 'Paramedico',
-                tier = 8
-            },
-        }
-    },
-
-    ['Hospital'] = {
-        Config = {
-            Salary = { -- SALARIO FAC
-                active = false, -- Se vai esta ativo ou nao
-                amount = 50000, -- Valor que vai receber
-                time = 10, -- tempo em tempo que vai receber salario em minuto(s)
-            },
-
-            Goals = { -- METAS
-                defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
-                itens = {
-                    -- ['polvora'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                }
-            }
-        },
-
-        List = {
-            ['DiretorHP'] = {
-                prefix = 'Diretor',
-                tier = 1
-            },
-            ['ViceDiretorHP'] = {
-                prefix = 'Vice Diretor',
-                tier = 2
-            },
-            ['Chefedesetor'] = {
-                prefix = 'Chefe de Setor',
-                tier = 3
-            },
-            ['Cirurgiao'] = {
-                prefix = 'Cirurgiao',
-                tier = 4
-            },
-            ['Psicologo'] = {
-                prefix = 'Psicologo',
-                tier = 5
-            },
-            ['MedicoHP'] = {
-                prefix = 'Medico',
-                tier = 6
-            },
-            ['EnfermeiroHP'] = {
-                prefix = 'Enfermeiro',
-                tier = 7
-            },
-            ['Paramedico'] = {
-                prefix = 'Paramedico',
-                tier = 8
-            },
-        }
-    },
-
     ['Policia'] = {
         Config = {
             Salary = { -- SALARIO FAC
@@ -706,377 +343,19 @@ Config.Groups = {
         },
 
         List = {
-            ['Comandante'] = {
-                prefix = 'Comandante',
-                tier = 1
-            },
-            ['Subcmd'] = {
-                prefix = 'Sub Comandante',
-                tier = 2
-            },
-            ['Major'] = {
-                prefix = 'Major',
-                tier = 3
-            },
-            ['Capitao'] = {
-                prefix = 'Capitao',
-                tier = 4
-            },
-            ['1Tenente'] = {
-                prefix = '1Tenente',
-                tier = 5
-            },
-            ['2Tenente'] = {
-                prefix = '2Tenente',
-                tier = 6
-            },
-            ['Subtenente'] = {
-                prefix = 'Subtenente',
-                tier = 7
-            },
-            ['1Sargento'] = {
-                prefix = '1Sargento',
-                tier = 8
-            },
-            ['2Sargento'] = {
-                prefix = '2Sargento',
-                tier = 9
-            },
-            ['3Sargento'] = {
-                prefix = '3Sargento',
-                tier = 10
-            },
-            ['Cabo'] = {
-                prefix = 'Cabo',
-                tier = 11
-            },
-            ['Soldado'] = {
-                prefix = 'Soldado',
-                tier = 12
-            },
-            ['Recruta'] = {
-                prefix = 'Recruta',
-                tier = 13
-            },
-        }
-    },
-
-
-    ['Policia2'] = {
-        Config = {
-            Salary = { -- SALARIO FAC
-                active = false, -- Se vai esta ativo ou nao
-                amount = 50000, -- Valor que vai receber
-                time = 10, -- tempo em tempo que vai receber salario em minuto(s)
-            },
-
-            Goals = { -- METAS
-                defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
-                itens = {
-                    -- ['polvora'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                }
-            }
-        },
-
-        List = {
-            ['Comandante2'] = {
-                prefix = 'Comandante',
-                tier = 1
-            },
-            ['Subcmd2'] = {
-                prefix = 'Sub Comandante',
-                tier = 2
-            },
-            ['Major2'] = {
-                prefix = 'Major',
-                tier = 3
-            },
-            ['Capitao2'] = {
-                prefix = 'Capitao',
-                tier = 4
-            },
-            ['1Tenente2'] = {
-                prefix = '1Tenente',
-                tier = 5
-            },
-            ['2Tenente2'] = {
-                prefix = '2Tenente',
-                tier = 6
-            },
-            ['Subtenente2'] = {
-                prefix = 'Subtenente',
-                tier = 7
-            },
-            ['1Sargento2'] = {
-                prefix = '1Sargento',
-                tier = 8
-            },
-            ['2Sargento2'] = {
-                prefix = '2Sargento',
-                tier = 9
-            },
-            ['3Sargento2'] = {
-                prefix = '3Sargento',
-                tier = 10
-            },
-            ['Cabo2'] = {
-                prefix = 'Cabo',
-                tier = 11
-            },
-            ['Soldado2'] = {
-                prefix = 'Soldado',
-                tier = 12
-            },
-            ['Recruta2'] = {
-                prefix = 'Recruta',
-                tier = 13
-            },
-        }
-    },
-
-
-    ['Swat'] = {
-        Config = {
-            Salary = { -- SALARIO FAC
-                active = false, -- Se vai esta ativo ou nao
-                amount = 50000, -- Valor que vai receber
-                time = 10, -- tempo em tempo que vai receber salario em minuto(s)
-            },
-
-            Goals = { -- METAS
-                defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
-                itens = {
-                    -- ['polvora'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                }
-            }
-        },
-
-        List = {
-            ['ComandanteSwat'] = {
-                prefix = 'Comandante',
-                tier = 1
-            },
-            ['SubcmdSwat'] = {
-                prefix = 'Sub Comandante',
-                tier = 2
-            },
-            ['MajorSwat'] = {
-                prefix = 'Major',
-                tier = 3
-            },
-            ['CapitaoSwat'] = {
-                prefix = 'Capitao',
-                tier = 4
-            },
-            ['1TenenteSwat'] = {
-                prefix = '1Tenente',
-                tier = 5
-            },
-            ['2TenenteSwat'] = {
-                prefix = '2Tenente',
-                tier = 6
-            },
-            ['SubtenenteSwat'] = {
-                prefix = 'Subtenente',
-                tier = 7
-            },
-            ['1SargentoSwat'] = {
-                prefix = '1Sargento',
-                tier = 8
-            },
-            ['2SargentoSwat'] = {
-                prefix = '2Sargento',
-                tier = 9
-            },
-            ['3SargentoSwat'] = {
-                prefix = '3Sargento',
-                tier = 10
-            },
-            ['CaboSwat'] = {
-                prefix = 'Cabo',
-                tier = 11
-            },
-            ['SoldadoSwat'] = {
-                prefix = 'Soldado',
-                tier = 12
-            },
-            ['RecrutaSwat'] = {
-                prefix = 'Recruta',
-                tier = 13
-            },
-        }
-    },
-
-
-    ['Exercito'] = {
-        Config = {
-            Salary = { -- SALARIO FAC
-                active = false, -- Se vai esta ativo ou nao
-                amount = 50000, -- Valor que vai receber
-                time = 10, -- tempo em tempo que vai receber salario em minuto(s)
-            },
-
-            Goals = { -- METAS
-                defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
-                itens = {
-                    -- ['polvora'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                }
-            }
-        },
-
-        List = {
-            ['GeneralExercito'] = {
-                prefix = 'General Exercito',
-                tier = 1
-            },
-            ['GeneralDivisao'] = {
-                prefix = 'General Divisao',
-                tier = 2
-            },
-            ['GeneralBrigada'] = {
-                prefix = 'General Brigada',
-                tier = 3
-            },
-            ['TenenteCoronelEB'] = {
-                prefix = 'Tenente Coronel',
-                tier = 4
-            },
-            ['MajorEB'] = {
-                prefix = 'Major',
-                tier = 5
-            },
-            ['CapitaoEB'] = {
-                prefix = 'Capitao',
-                tier = 6
-            },
-            ['1TenenteEB'] = {
-                prefix = '1Tenente',
-                tier = 7
-            },
-            ['2TenenteEB'] = {
-                prefix = 'Tenente',
-                tier = 8
-            },
-            ['SubTenenteEB'] = {
-                prefix = 'Subtenente',
-                tier = 9
-            },
-            ['1SargentoEB'] = {
-                prefix = '1Sargento',
-                tier = 10
-            },
-            ['2SargentoEB'] = {
-                prefix = '2Sargento',
-                tier = 11
-            },
-            ['3SargentoEB'] = {
-                prefix = '3Sargento',
-                tier = 12
-            },
-            ['CaboEB'] = {
-                prefix = 'Cabo',
-                tier = 13
-            },
-            ['SoldadoEB'] = {
-                prefix = 'Soldado',
-                tier = 14
-            },
-            ['RecrutaEB'] = {
-                prefix = 'Recruta',
-                tier = 15
-            },
-        }
-    },
-
-    ['Fbi'] = {
-        Config = {
-            Salary = { -- SALARIO FAC
-                active = false, -- Se vai esta ativo ou nao
-                amount = 50000, -- Valor que vai receber
-                time = 10, -- tempo em tempo que vai receber salario em minuto(s)
-            },
-
-            Goals = { -- METAS
-                defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
-                itens = {
-                    -- ['polvora'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                }
-            }
-        },
-
-        List = {
-            ['Delegado'] = {
-                prefix = 'Delegado',
-                tier = 1
-            },
-            ['Investigador'] = {
-                prefix = 'Investigador',
-                tier = 2
-            },
-            ['Escrivao'] = {
-                prefix = 'Escrivão',
-                tier = 3
-            },
-            ['Agente'] = {
-                prefix = 'Agente',
-                tier = 4
-            },
-        }
-    },
-
-    ['Alcapone'] = {
-        Config = {
-            Salary = { -- SALARIO FAC
-                active = false, -- Se vai esta ativo ou nao
-                amount = 50000, -- Valor que vai receber
-                time = 10, -- tempo em tempo que vai receber salario em minuto(s)
-            },
-
-            Goals = { -- METAS
-                defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
-                itens = {
-                    -- ['polvora'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                }
-            }
-        },
-
-        List = {
-            ['ALcaponeL'] = {
-                prefix = 'Lider',
-                tier = 1
-            },
-            ['ALcapone'] = {
-                prefix = 'Membro',
-                tier = 2
-            },
-        }
-    },
-
-    ['ilegalBase'] = {
-        Config = {
-            Salary = { -- SALARIO FAC
-                active = false, -- Se vai esta ativo ou nao
-                amount = 50000, -- Valor que vai receber
-                time = 10, -- tempo em tempo que vai receber salario em minuto(s)
-            },
-
-            Goals = { -- METAS
-                defaultReward = 300, -- Valor Padrão da recompensa ( obs Lider consegue alterar in-game )
-                itens = {
-                    -- ['polvora'] = 50, -- Quantidade Padrão da recompensa ( obs Lider consegue alterar in-game )
-                }
-            }
-        },
-
-        List = {
-            ['ilegalBaseL'] = {
-                prefix = 'Lider',
-                tier = 1
-            },
-            ['ilegalBase'] = {
-                prefix = 'Membro',
-                tier = 2
-            },
+            ['Comandante'] = { prefix = 'Comandante', tier = 1 },
+            ['Subcmd'] = { prefix = 'Sub Comandante', tier = 2 },
+            ['Major'] = { prefix = 'Major', tier = 3 },
+            ['Capitao'] = { prefix = 'Capitao', tier = 4 },
+            ['1Tenente'] = { prefix = '1Tenente', tier = 5 },
+            ['2Tenente'] = { prefix = '2Tenente', tier = 6 },
+            ['Subtenente'] = { prefix = 'Subtenente', tier = 7 },
+            ['1Sargento'] = { prefix = '1Sargento', tier = 8 },
+            ['2Sargento'] = { prefix = '2Sargento', tier = 9 },
+            ['3Sargento'] = { prefix = '3Sargento', tier = 10 },
+            ['Cabo'] = { prefix = 'Cabo', tier = 11 },
+            ['Soldado'] = { prefix = 'Soldado', tier = 12 },
+            ['Recruta'] = { prefix = 'Recruta', tier = 13 },
         }
     },
 

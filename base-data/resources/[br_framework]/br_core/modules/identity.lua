@@ -37,7 +37,7 @@ function BR.updateIdentity(user_id)
 	if user_id then
 		cache['getUserIdentity'][user_id] = nil
 	end
-end 
+end
 
 function BR.getUserByRegistration(registration)
 	if registration then
@@ -84,7 +84,7 @@ function BR.generateStringNumber(format)
 	return number
 end
 
-function BR.generateRegistrationNumber(cbr)
+function BR.generateRegistrationNumber()
 	local user_id = nil
 	local registration = ""
 	repeat
@@ -110,7 +110,7 @@ end
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- EVENTOS
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-AddEventHandler("BR:playerJoin",function(user_id,source,name)
+AddEventHandler("BR:playerJoin",function(user_id)
 	if not BR.getUserIdentity(user_id) then
 		local registration = BR.generateRegistrationNumber()
 		local phone = BR.generatePhoneNumber()
@@ -118,7 +118,7 @@ AddEventHandler("BR:playerJoin",function(user_id,source,name)
 	end
 end)
 
-AddEventHandler("BR:playerSpawn",function(user_id, source, first_spawn)
+AddEventHandler("BR:playerSpawn",function(user_id, source)
 	local identity = BR.getUserIdentity(user_id)
 	if identity then
 		BRclient._setRegistrationNumber(source,identity.registration or "DDDDDD")

@@ -311,7 +311,9 @@ end
 function cRP.checkJobs()
 	local source = source
 	local user_id = BR.getUserId(source)
-    local groupv = BR.getUserGroupByType(user_id,TypeJob) or "Desempregado"
+
+	local groupv = BR.getUserGroupByType(user_id,"org") or "Desempregado"
+	
 	local groupname = BR.getGroupTitle(groupv)
 
 	local groupvip = BR.getUserGroupByType(user_id,TypeVip) or "FREE"

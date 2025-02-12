@@ -455,7 +455,7 @@ end
 
 function Organizations:GenerateCache()
     local time = os.time()
-    print(('^1[%s] ^0Iniciando Cache dos jogadores.'):format(GetCurrentResourceName():upper()))
+    print(('^4[%s] ^0Iniciando Cache dos jogadores.'):format(GetCurrentResourceName():upper()))
 
     local query = BR.query('br_orgs/GetUsersGroup') 
     local FormatUser = {}
@@ -486,7 +486,7 @@ function Organizations:GenerateCache()
         end
     end
 
-    print(('^2[%s] ^0Painel Orgs iniciado com sucesso tempo %s segundo(s).'):format(GetCurrentResourceName():upper(), os.time() - time))
+    print(('^3[%s] ^0Painel Orgs iniciado com sucesso tempo %s segundo(s).'):format(GetCurrentResourceName():upper(), os.time() - time))
     FormatUser = {}
 
     self:VerifyPlayers()

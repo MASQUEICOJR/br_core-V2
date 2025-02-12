@@ -35,6 +35,8 @@ function BR.getUserGroupByType(user_id,gtype)
 	end
 	return ""
 end
+
+
 function BR.addUserGroup(user_id,group)
 	if not BR.hasGroup(user_id,group) then
 		local user_groups = BR.getUserGroups(user_id)

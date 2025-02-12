@@ -462,8 +462,9 @@ AddEventHandler("queue:playerConnecting",function(source,ids,name,setKickReason,
 					end 
 				end
 				
-				deferrals.done('MENSAGEM DE SEM WL, APROVE [ ID: '..tostring(id or tonumber(newUser[1].id) or steam)..' ]')
-				TriggerEvent("queue:playerConnectingRemoveQueues",ids)
+				deferrals.done()
+				-- deferrals.done('MENSAGEM DE SEM WL, APROVE [ ID: '..tostring(id or tonumber(newUser[1].id) or steam)..' ]')
+				-- TriggerEvent("queue:playerConnectingRemoveQueues",ids)
 			end
 		else
 			deferrals.done("MENSAGEM DE BANIDO")

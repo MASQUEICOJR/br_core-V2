@@ -3,14 +3,19 @@
 -- THREAD THIRST/
 -----------------------------------------------------------------------------------------------------------------------------------------
 Citizen.CreateThread(function()
-	while true do
-		Citizen.Wait(80000)
-		for k,v in pairs(BR.users) do
-			BR.downgradeThirst(v,2)
-			BR.downgradeHunger(v,1)
-		end
-	end
+    while true do
+        Citizen.Wait(80000)
+        if BR.users then
+            for k, v in pairs(BR.users) do
+                BR.downgradeThirst(v, 2)
+                BR.downgradeHunger(v, 1)
+            end
+        else
+            print("BR.users is nil or empty")
+        end
+    end
 end)
+
 -----------------------------------------------------------------------------------------------------------------------------------------
 -- UPDAGRADETHIRST
 -----------------------------------------------------------------------------------------------------------------------------------------

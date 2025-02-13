@@ -23,6 +23,7 @@ server_scripts {
 	"modules/aptitude.lua",
 	"modules/basic_items.lua",
 	"modules/cloakroom.lua",
+	"modules/prepare.lua",
 	"init.lua"
 }
 

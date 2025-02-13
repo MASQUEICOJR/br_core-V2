@@ -453,6 +453,8 @@ function Organizations:FormatConfig()
     self:GenerateCache()
 end
 
+
+
 function Organizations:GenerateCache()
     local time = os.time()
     print(('^4[%s] ^0Iniciando Cache dos jogadores.'):format(GetCurrentResourceName():upper()))

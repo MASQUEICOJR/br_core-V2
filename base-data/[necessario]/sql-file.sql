@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS `account` (
   `whitelisted` tinyint(1) DEFAULT 0,
   `banned` tinyint(1) DEFAULT 0,
   `chars` int(1) DEFAULT 1,
+  `deleted` int(1) DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -71,16 +72,6 @@ CREATE TABLE IF NOT EXISTS `srv_data` (
   PRIMARY KEY (`dkey`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table br.srv_data: ~0 rows (approximately)
-
--- Dumping structure for table br.users
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `steam` varchar(100) DEFAULT NULL,
-  `deleted` int(1) DEFAULT 0,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
 -- Dumping data for table br.users: ~0 rows (approximately)
 
 -- Dumping structure for table br.user_data
@@ -89,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `user_data` (
   `dkey` varchar(100) NOT NULL,
   `dvalue` text DEFAULT NULL,
   PRIMARY KEY (`user_id`,`dkey`),
-  CONSTRAINT `fk_user_data_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+  CONSTRAINT `fk_user_data_users` FOREIGN KEY (`user_id`) REFERENCES `account` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Dumping data for table br.user_data: ~0 rows (approximately)
@@ -116,18 +107,18 @@ CREATE TABLE IF NOT EXISTS `user_identities` (
   PRIMARY KEY (`user_id`),
   KEY `registration` (`registration`),
   KEY `phone` (`phone`),
-  CONSTRAINT `fk_user_identities_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+  CONSTRAINT `fk_user_identities_users` FOREIGN KEY (`user_id`) REFERENCES `account` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Dumping data for table br.user_identities: ~0 rows (approximately)
-
+  
 -- Dumping structure for table br.user_ids
 CREATE TABLE IF NOT EXISTS `user_ids` (
   `identifier` varchar(100) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`identifier`),
   KEY `fk_user_ids_users` (`user_id`),
-  CONSTRAINT `fk_user_ids_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+  CONSTRAINT `fk_user_ids_users` FOREIGN KEY (`user_id`) REFERENCES `account` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Dumping data for table br.user_ids: ~0 rows (approximately)
@@ -138,7 +129,7 @@ CREATE TABLE IF NOT EXISTS `user_moneys` (
   `wallet` int(11) DEFAULT NULL,
   `bank` int(11) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
-  CONSTRAINT `fk_user_moneys_users` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+  CONSTRAINT `fk_user_moneys_users` FOREIGN KEY (`user_id`) REFERENCES `account` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Dumping data for table br.user_moneys: ~0 rows (approximately)

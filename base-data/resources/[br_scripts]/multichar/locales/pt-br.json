@@ -1,0 +1,13 @@
+{
+    "firstname": "Nome",
+    "lastname": "Sobrenome",
+    "birthdate": "Data de Nascimento",
+    "select_spawn": "Selecione um Spawn",
+    "retry_character_error": "Falha ao obter personagem, Relogue!",
+    "lastname_invalid": "Nome invalido",
+    "firstname_invalid": "Sobrenome invalido",
+    "player_need_be_18_more": "Idade minima de (18 anos)",
+    "last_location": "Ultima localização",
+    "new_char": "Novo personagem",
+    "register_menu_title": "Registro"
+}

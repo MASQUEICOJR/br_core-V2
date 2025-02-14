@@ -1,7 +1,4 @@
-identity = {}
-local Tunnel = module("br_core", "lib/Tunnel")
-local Proxy = module("br_core", "lib/Proxy")
-BR = Proxy.getInterface("BR")
+
 Tunnel.bindInterface(GetCurrentResourceName(), identity)
 BRSERVER = Tunnel.getInterface(GetCurrentResourceName())
 

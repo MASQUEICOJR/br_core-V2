@@ -1,84 +1,40 @@
+-- BLIPS: see https://wiki.gtanet.work/index.php?title=Blips for blip id/color
 
 local Tools = module("br_core", "lib/Tools")
+-- TUNNEL CLIENT API
 
+-- BLIP
 
-function tBR.addBlip(x,y,z,idtype,idcolor,text,scale)
-  local blip = AddBlipForCoord(x+0.001,y+0.001,z+0.001) 
+-- create new blip, return native id
+function tBR.addBlip(x, y, z, idtype, idcolor, text, size)
+  local blip = AddBlipForCoord(x + 0.001, y + 0.001, z + 0.001) -- solve strange gta5 madness with integer -> double
   SetBlipSprite(blip, idtype)
   SetBlipAsShortRange(blip, true)
-  SetBlipColour(blip,idcolor)
-  SetBlipScale(blip, scale)
+  SetBlipColour(blip, idcolor)
+  SetBlipScale(blip, size)
 
   if text ~= nil then
     BeginTextCommandSetBlipName("STRING")
-    AddTextComponentString(text)
+    AddTextComponentSubstringPlayerName(text)
     EndTextCommandSetBlipName(blip)
-  end
-
-  if scale == nil then
-    SetBlipScale(blip, 0.6)
   end
 
   return blip
 end
 
-function tBR.addBlipProperty(x,y,z,idtype,idcolor,text,scale)
-  local blip = AddBlipForCoord(x+0.001,y+0.001,z+0.001) 
-  SetBlipSprite(blip, idtype)
-  SetBlipCategory(blip, 10)
-  SetBlipAsShortRange(blip, true)
-  SetBlipColour(blip,idcolor)
-  SetBlipScale(blip, scale)
-
-  if text ~= nil then
-    BeginTextCommandSetBlipName("STRING")
-    AddTextComponentString(text)
-    EndTextCommandSetBlipName(blip)
-  end
-
-  if scale == nil then
-    SetBlipScale(blip, 0.4)
-  end
-
-  return blip
-end
-
-function tBR.addBlipToEntity(id,idtype,idcolor,text,scale)
-  local player = GetPlayerFromServerId(id)
-  local ped = GetPlayerPed(player)
-  if ped ~= PlayerPedId() then
-    local blip = AddBlipForEntity(ped)
-    SetBlipSprite(blip, idtype)
-    SetBlipColour(blip, idcolor)
-    SetBlipScale(blip,scale)
-    
-    if text ~= nil then
-      BeginTextCommandSetBlipName("STRING")
-      AddTextComponentString(text)
-      EndTextCommandSetBlipName(blip)
-    end
-
-    if scale == nil then
-      SetBlipScale(blip, 0.8)
-    end
-
-    return blip
-  end
-  
-  return false
-end
-
-
+-- remove blip by native id
 function tBR.removeBlip(id)
   RemoveBlip(id)
 end
 
 local named_blips = {}
 
-function tBR.setNamedBlip(name,x,y,z,idtype,idcolor,text)
+-- set a named blip (same as addBlip but for a unique name, add or update)
+-- return native id
+function tBR.setNamedBlip(name, x, y, z, idtype, idcolor, text)
   tBR.removeNamedBlip(name) -- remove old one
 
-  named_blips[name] = tBR.addBlip(x,y,z,idtype,idcolor,text)
+  named_blips[name] = tBR.addBlip(x, y, z, idtype, idcolor, text)
   return named_blips[name]
 end
 
@@ -93,13 +49,13 @@ end
 -- GPS
 
 -- set the GPS destination marker coordinates
-function tBR.setGPS(x,y)
-  SetNewWaypoint(x+0.0001,y+0.0001)
+function tBR.setGPS(x, y)
+  SetNewWaypoint(x + 0.0001, y + 0.0001)
 end
 
 -- set route to native blip id
 function tBR.setBlipRoute(id)
-  SetBlipRoute(id,true)
+  SetBlipRoute(id, true)
 end
 
 -- MARKER
@@ -110,31 +66,30 @@ local named_markers = {}
 
 -- add a circular marker to the game map
 -- return marker id
-function tBR.addMarker(x,y,z,sx,sy,sz,r,g,b,a,visible_distance)
-  local marker = {x=x,y=y,z=z,sx=sx,sy=sy,sz=sz,r=r,g=g,b=b,a=a,visible_distance=visible_distance}
-
-
-  -- default values
-  if marker.sx == nil then marker.sx = 2.0 end
-  if marker.sy == nil then marker.sy = 2.0 end
-  if marker.sz == nil then marker.sz = 0.7 end
-
-  if marker.r == nil then marker.r = 0 end
-  if marker.g == nil then marker.g = 155 end
-  if marker.b == nil then marker.b = 255 end
-  if marker.a == nil then marker.a = 200 end
-
-  -- fix gta5 integer -> double issue
-  marker.x = marker.x+0.001
-  marker.y = marker.y+0.001
-  marker.z = marker.z+0.001
-  marker.sx = marker.sx+0.001
-  marker.sy = marker.sy+0.001
-  marker.sz = marker.sz+0.001
-
-  if marker.visible_distance == nil then marker.visible_distance = 150 end
-
+function tBR.addMarker(
+    markerId,
+    x,
+    y,
+    z,
+    sx,
+    sy,
+    sz, r, g, b, a, visible_distance, rx, ry, rz, updown, rotate,
+    textureDict, textureName)
   local id = marker_ids:gen()
+  local marker = lib.marker.new({
+    coords = vec3(x + 0.001, y + 0.001, z + 0.001),
+    type = markerId,
+    bobUpAndDown = updown or false,
+    rotate = rotate or false,
+    color = { r = r or 0, g = g or 255, b = b or 255, a = a or 255 },
+    height = sz,
+    width = sx,
+    textureDict = textureDict or nil,
+    textureName = textureName or nil,
+    rotation = vec3(rx or 0.0, ry or 0.0, rz or 0.0),
+    faceCamera = false,
+    distance = visible_distance or 20.0
+  })
   markers[id] = marker
 
   return id
@@ -150,10 +105,12 @@ end
 
 -- set a named marker (same as addMarker but for a unique name, add or update)
 -- return id
-function tBR.setNamedMarker(name,x,y,z,sx,sy,sz,r,g,b,a,visible_distance)
+function tBR.setNamedMarker(name, markerId, x, y, z, sx, sy, sz, r, g, b, a, visible_distance, rx, ry, rz, updown,
+                             rotate, textureDict, textureName)
   tBR.removeNamedMarker(name) -- remove old marker
 
-  named_markers[name] = tBR.addMarker(x,y,z,sx,sy,sz,r,g,b,a,visible_distance)
+  named_markers[name] = tBR.addMarker(markerId, x, y, z, sx, sy, sz, r, g, b, a, visible_distance, rx, ry, rz, updown,
+    rotate, textureDict, textureName)
   return named_markers[name]
 end
 
@@ -167,16 +124,15 @@ end
 -- markers draw loop
 Citizen.CreateThread(function()
   while true do
-    Citizen.Wait(0)
-
-    local px,py,pz = tBR.getPosition()
-
-    for k,v in pairs(markers) do
-      -- check visibility
-      if GetDistanceBetweenCoords(v.x,v.y,v.z,px,py,pz,true) <= v.visible_distance then
-        DrawMarker(1,v.x,v.y,v.z,0,0,0,0,0,0,v.sx,v.sy,v.sz,v.r,v.g,v.b,v.a,0,0,0,0)
+    local idle = 5000
+    local pos = GetEntityCoords(PlayerPedId())
+    for _, marker in pairs(markers) do
+      if #(pos - marker.coords) <= (marker.distance or 15.0) then
+        marker:draw()
+        idle = 0
       end
     end
+    Wait(idle)
   end
 end)
 
@@ -184,59 +140,28 @@ end)
 
 local areas = {}
 
--- create/update a cylinder area
-function tBR.setArea(name,x,y,z,radius,height)
-  local area = {x=x+0.001,y=y+0.001,z=z+0.001,radius=radius,height=height}
+-- create/update a cylinder area ? esfera?
+function tBR.setArea(name, x, y, z, radius)
+  local zone = lib.zones.sphere({
+    coords = vec3(x + 0.001, y + 0.001, z + 0.001),
+    radius = radius or 2.0
+  })
 
-  -- default values
-  if area.height == nil then area.height = 6 end
+  zone.onEnter = function(self)
+    BRserver._enterArea(name)
+  end
 
-  areas[name] = area
+  zone.onExit = function(self)
+    BRserver._leaveArea(name)
+  end
+
+  areas[name] = zone
 end
 
 -- remove area
 function tBR.removeArea(name)
   if areas[name] then
+    areas[name]:remove()
     areas[name] = nil
   end
-end
-
--- areas triggers detections
-Citizen.CreateThread(function()
-  while true do
-    Citizen.Wait(250)
-
-    local px,py,pz = tBR.getPosition()
-
-    for k,v in pairs(areas) do
-
-      local player_in = (GetDistanceBetweenCoords(v.x,v.y,v.z,px,py,pz,true) <= v.radius and math.abs(pz-v.z) <= v.height)
-
-      if v.player_in and not player_in then
-        BRserver._leaveArea(k)
-      elseif not v.player_in and player_in then
-        BRserver._enterArea(k)
-      end
-
-      v.player_in = player_in 
-    end
-  end
-end)
-
-function tBR.setStateOfClosestDoor(doordef, locked, doorswing)
-  local x,y,z = tBR.getPosition()
-  local hash = doordef.modelhash
-  if hash == nil then
-    hash = GetHashKey(doordef.model)
-  end
-
-  SetStateOfClosestDoorOfType(hash,x,y,z,locked,doorswing+0.0001)
-end
-
-function tBR.openClosestDoor(doordef)
-  tBR.setStateOfClosestDoor(doordef, false, 0)
-end
-
-function tBR.closeClosestDoor(doordef)
-  tBR.setStateOfClosestDoor(doordef, true, 0)
 end

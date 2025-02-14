@@ -1,123 +1,139 @@
 local cfg = {}
 
+--vamos mudar depois para coloca cargos
+
+-- define each group with a set of permissions
+-- _config property:
+--- title (optional): group display name
+--- gtype (optional): used to have only one group with the same gtype per player (example: a job gtype to only have one job)
+--- onspawn (optional): function(player) (called when the player spawn with the group)
+--- onjoin (optional): function(player) (called when the player join the group)
+--- onleave (optional): function(player) (called when the player leave the group)
+--- (you have direct access to BR and BRclient, the tunnel to client, in the config callbacks)
+
 cfg.groups = {
-
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- STAFF
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	["developer"] = { _config = { gtype = "staff", title = "developer" }, "developer.permisssao", "staff.permissao" },
-	["administrador"] = { _config = { gtype = "staff", title = "administrador" }, "administrador.permissao", "staff.permissao" },
-	["moderador"] = { _config = { gtype = "staff", title = "moderador" }, "moderador.permissao", "staff.permissao" },
-	["suporte"] = { _config = { gtype = "staff", title = "suporte" }, "suporte.permissao", "staff.permissao" },
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- HOSPITAL
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	["Diretor"] = { _config = { gtype = "org", salario = 27000, ptr = true, title = "Hospital" },"dv.permissao", "unizk.permissao" },
-	["Vice Diretor"] = { _config = { gtype = "org", salario = 25000, ptr = true, title = "Hospital"},"dv.permissao", "unizk.permissao" },
-	["Gestao"] = { _config = { gtype = "org", salario = 23000, ptr = true, title = "Hospital"},"dv.permissao", "unizk.permissao" },
-	["Psicologo"] = { _config = { gtype = "org", salario = 20000, ptr = true, title = "Hospital"},"dv.permissao", "unizk.permissao" },
-	["Medico"] = { _config = { gtype = "org", salario = 17000, ptr = true, title = "Hospital"},"dv.permissao", "unizk.permissao" },
-	["Enfermeiro"] = { _config = { gtype = "org", salario = 15000, ptr = true, title = "Hospital"}, "unizk.permissao" },
-	["Paramedico"] = { _config = { gtype = "org", salario = 10000, ptr = true, title = "Hospital"}, "unizk.permissao" },
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- JUDICIARIO
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	["Ministro"] = { _config = { gtype = "org", salario = 20000, ptr = true, title = "Judiciario"}, "judiciario.permissao" },
-	["Juiz"] = { _config = { gtype = "org", salario = 10000, ptr = nil, title = "Judiciario"}, "judiciario.permissao" },
-	["Desembargador"] = { _config = { gtype = "org", salario = 10000, title = "Judiciario"}, "judiciario.permissao" },
-	["Promotor"] = { _config = { gtype = "org", salario = 8000, ptr = nil, title = "Judiciario"}, "judiciario.permissao" },
-	["Advogado"] = { _config = { gtype = "org", salario = 5000, ptr = nil, title = "Judiciario"}, "judiciario.permissao" },
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- POLICIA TATICA
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	["ComandoTatica"] = { _config = { gtype = "org", salario = 17000, ptr = true, title = "Tatica" }, "policia.permissao", "tatica", "baupolicialider", "player.blips","disparo", "portasolicia", "algemar", "countpolicia" },
-	["SubComandoTatica"] = { _config = { gtype = "org", salario = 18000, ptr = true, title = "Tatica" }, "policia.permissao", "tatica", "baupolicialider", "player.blips", "disparo", "portasolicia", "algemar", "countpolicia"  },
-	["SupervisorTatica"] = { _config = { gtype = "org", salario = 17000, ptr = true, title = "Tatica" }, "policia.permissao", "tatica", "player.blips", "disparo", "portasolicia", "algemar", "countpolicia"  },
-	["EliteTatica"] = { _config = { gtype = "org", salario = 17000, ptr = true, title = "Tatica" }, "policia.permissao", "tatica", "player.blips", "disparo", "portasolicia", "algemar", "countpolicia"  },
-	["EstagiarioTatica"] = { _config = { gtype = "org", salario = 17000, ptr = true, title = "Tatica" }, "policia.permissao", "tatica", "player.blips", "disparo", "portasolicia", "algemar", "countpolicia"  },
-
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- POLICIA CIVIL
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	["DelegadoGeral"] = { _config = { gtype = "org", salario = 25000, ptr = true, title = "PoliciaCivil" }, "policiacivil", "baupoliciacivillider", "player.blips", "disparo", "portasolicia", "algemar", "countpolicia"  },
-	["ComandanteCore"] = { _config = { gtype = "org", salario = 25000, ptr = true, title = "PoliciaCivil" }, "policiacivil", "baupoliciacivillider", "player.blips", "disparo", "portasolicia", "algemar", "countpolicia"  },
-	["SubComandanteCore"] = { _config = { gtype = "org", salario = 20000, ptr = true, title = "PoliciaCivil" }, "policiacivil", "baupoliciacivillider", "player.blips", "disparo", "portasolicia", "algemar", "countpolicia"  },
-	["Delegado"] = { _config = { gtype = "org", salario = 15000, ptr = true, title = "PoliciaCivil" }, "policiacivil", "player.blips", "disparo", "portasolicia", "algemar", "countpolicia"  },
-	["Core"] = { _config = { gtype = "org", salario = 15000, ptr = true, title = "PoliciaCivil" }, "policiacivil", "player.blips", "disparo", "policia.radio", "portasolicia", "algemar", "countpolicia" },
-	["Perito"] = { _config = { gtype = "org", salario = 12000, ptr = true, title = "PoliciaCivil" }, "policiacivil", "player.blips", "disparo", "portasolicia", "algemar", "countpolicia"  },
-	["Escrivao"] = { _config = { gtype = "org", salario = 10000, ptr = true, title = "PoliciaCivil" }, "policiacivil", "player.blips", "disparo", "portasolicia", "algemar", "countpolicia"  },
-	["Investigador"] = { _config = { gtype = "org", salario = 8000, ptr = true, title = "PoliciaCivil" }, "policiacivil", "player.blips", "disparo", "portasolicia", "algemar", "countpolicia"  },
-	["Agente"] = { _config = { gtype = "org", salario = 6000, ptr = true, title = "PoliciaCivil" }, "policiacivil", "player.blips", "disparo", "portasolicia", "algemar", "countpolicia"  },
-	["Recruta"] = { _config = { gtype = "org", salario = 4000, ptr = true, title = "PoliciaCivil" }, "policiacivil", "player.blips", "disparo", "portasolicia", "algemar", "countpolicia"  },
-
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------  /groupadd 1 "lider bloods"
--- ARMAS
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	--MAFIA01--
-	["Lider [MAFIA01]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Mafia01", orgType = "Armas"}, "perm.mafia01", "perm.lidermafia01", "perm.arma", "perm.ilegal", "perm.baumafia01"},
-	["Sub-Lider [MAFIA01]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Mafia01", orgType = "Armas" }, "perm.lidermafia01", "perm.mafia01", "perm.arma", "perm.ilegal", "perm.baumafia01"},
-	["Gerente [MAFIA01]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Mafia01", orgType = "Armas" }, "perm.mafia01", "perm.arma", "perm.ilegal", "perm.baumafia01"},
-	["Membro [MAFIA01]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Mafia01", orgType = "Armas" }, "perm.mafia01", "perm.arma", "perm.ilegal", "perm.baumafia01"},
-	["Novato [MAFIA01]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Mafia01", orgType = "Armas" }, "perm.mafia01", "perm.arma", "perm.ilegal"},
-
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- MUNIÇÃO
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	--YAKUZA--
-	["Lider [YAKUZA]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Yakuza", orgType = "Municao"}, "perm.yakuza", "perm.lideryakuza", "perm.muni", "perm.ilegal", "perm.bauyakuza"},
-	["Sub-Lider [YAKUZA]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Yakuza", orgType = "Municao"}, "perm.lideryakuza", "perm.yakuza", "perm.muni", "perm.ilegal", "perm.bauyakuza"},
-	["Gerente [YAKUZA]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Yakuza", orgType = "Municao"}, "perm.yakuza", "perm.muni", "perm.ilegal", "perm.bauyakuza"},
-	["Membro [YAKUZA]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Yakuza", orgType = "Municao"}, "perm.yakuza", "perm.muni", "perm.ilegal", "perm.bauyakuza"},
-	["Novato [YAKUZA]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Yakuza", orgType = "Municao"}, "perm.yakuza", "perm.muni", "perm.ilegal"},
-
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- DESMANCHE
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	--FURIOUS--
-	["Lider [FURIOUS]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Furious", orgType = "Desmanche"}, "perm.furious", "perm.liderfurious", "perm.gerentefurious", "perm.desmanche", "perm.ilegal", "perm.baufurious"},
-	["Sub-Lider [FURIOUS]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Furious", orgType = "Desmanche"}, "perm.liderfurious", "perm.gerentefurious", "perm.furious", "perm.desmanche", "perm.ilegal", "perm.baufurious"},
-	["Gerente [FURIOUS]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Furious", orgType = "Desmanche"}, "perm.gerentefurious", "perm.furious", "perm.desmanche", "perm.ilegal", "perm.baufurious"},
-	["Membro [FURIOUS]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Furious", orgType = "Desmanche"}, "perm.furious", "perm.desmanche", "perm.ilegal", "perm.baufurious"},
-	["Novato [FURIOUS]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Furious", orgType = "Desmanche"}, "perm.furious", "perm.desmanche", "perm.ilegal"},
-
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- LAVAGEM
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	--VANILLA--
-	["Lider [VANILLA]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Vanilla", orgType = "Lavagem"}, "perm.lidervanilla", "perm.vanilla", "perm.lavagem", "perm.ilegal", "perm.bauvanilla"},
-	["Sub-Lider [VANILLA]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Vanilla",orgType = "Lavagem"}, "perm.lidervanilla", "perm.vanilla", "perm.lavagem", "perm.ilegal", "perm.bauvanilla"},	
-	["Gerente [VANILLA]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Vanilla",orgType = "Lavagem"}, "perm.vanilla", "perm.lavagem", "perm.ilegal", "perm.bauvanilla"},
-	["Membro [VANILLA]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Vanilla",orgType = "Lavagem"}, "perm.vanilla", "perm.lavagem", "perm.ilegal", "perm.bauvanilla"},
-	["Novato [VANILLA]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Vanilla",orgType = "Lavagem"}, "perm.vanilla", "perm.lavagem", "perm.ilegal"},
-
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- DROGAS
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	--CANADA--
-	["Lider [CANADA]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Canada", orgType = "Drogas"}, "perm.canada", "perm.lidercanada", "perm.drogas", "perm.ilegal", "perm.maconha", "perm.baucanada"},
-	["Sub-Lider [CANADA]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Canada", orgType = "Drogas"}, "perm.lidercanada", "perm.canada", "perm.drogas", "perm.ilegal", "perm.maconha", "perm.baucanada"},
-	["Gerente [CANADA]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Canada", orgType = "Drogas"}, "perm.canada", "perm.drogas", "perm.ilegal", "perm.maconha", "perm.baucanada"},
-	["Membro [CANADA]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Canada", orgType = "Drogas"}, "perm.canada", "perm.drogas", "perm.ilegal", "perm.maconha", "perm.baucanada"},
-	["Novato [CANADA]"] = { _config = { gtype = "org", salario = nil, ptr = nil, title = "Canada", orgType = "Drogas"}, "perm.canada", "perm.drogas", "perm.maconha", "perm.ilegal"},
-
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
--- MECANICA
-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	["Lider [MECANICA]"] = { _config = { gtype = "org", salario = 3500, ptr = nil, title = "Mecanica" }, "dv.permissao", "perm.mecanica", "perm.lidermecanica", "perm.tunar", "perm.baumecanica"},
-	["Sub-Lider [MECANICA]"] = { _config = { gtype = "org", salario = 3000, ptr = nil, title = "Mecanica" }, "perm.mecanica", "perm.tunar", "perm.baumecanica"},
-	["Gerente [MECANICA]"] = { _config = { gtype = "org", salario = 2500, ptr = nil, title = "Mecanica" }, "perm.mecanica", "perm.tunar", "perm.baumecanica"},
-	["Membro [MECANICA]"] = { _config = { gtype = "org", salario = 2000, ptr = nil, title = "Mecanica" }, "perm.mecanica", "perm.tunar", "perm.baumecanica"},
-	["Novato [MECANICA]"] = { _config = { gtype = "org", salario = 1500, ptr = nil, title = "Mecanica" }, "perm.mecanica", "perm.tunar"},
-
-
+  ["superadmin"] = {
+    _config = { onspawn = function(player) BR.notify(player, "You are superadmin.", nil, 5000, 'inform') end },
+    "player.group.add",
+    "player.group.remove",
+    "player.givemoney",
+    "player.giveitem"
+  },
+  ["admin"] = {
+    "admin.tickets",
+    "admin.announce",
+    "player.list",
+    "player.whitelist",
+    "player.unwhitelist",
+    "player.kick",
+    "player.ban",
+    "player.unban",
+    "player.noclip",
+    "player.custom_emote",
+    "player.custom_sound",
+    "player.display_custom",
+    "player.coords",
+    "player.tptome",
+    "player.tpto"
+  },
+  ["god"] = {
+    "admin.god" -- reset survivals/health periodically
+  },
+  -- the group user is auto added to all logged players
+  ["user"] = {
+    "player.phone",
+    "player.calladmin",
+    "police.askid",
+    "police.store_weapons",
+    "police.seizable" -- can be seized
+  },
+  ["police"] = {
+    _config = {
+      title = "Police",
+      gtype = "job",
+      jobtype = 'leo',
+      -- onjoin = function(player) BRclient._setCop(player, true) end,
+      -- onspawn = function(player) BRclient._setCop(player, true) end,
+      -- onleave = function(player) BRclient._setCop(player, false) end,
+      grades = {
+        [1] = { name = 'Recruta', salary = 1600},
+        [2] = { name = 'Capitão', salary = 2400},
+        [3] = { name = 'Major', salary = 3800},
+        [4] = { name = 'Sargento', salary = 4500 },
+        [5] = { name = 'Comando', salary = 8000, isboss = true },
+      }
+    },
+    "police.menu",
+    "police.cloakroom",
+    "police.pc",
+    "police.handcuff",
+    "police.drag",
+    "police.putinveh",
+    "police.getoutveh",
+    "police.check",
+    "police.service",
+    "police.wanted",
+    "police.seize.weapons",
+    "police.seize.items",
+    "police.jail",
+    "police.fine",
+    "police.announce",
+    "-police.store_weapons",
+    "-police.seizable" -- negative permission, police can't seize itself, even if another group add the permission
+  },
+  ["emergency"] = {
+    _config = {
+      title = "Emergency",
+      gtype = "job",
+      jobtype = 'ems',
+      grades = {
+        [1] = { name = 'Enfermeiro', salary = 1580 },
+        [2] = { name = 'Médico', salary = 2500 },
+        [3] = { name = 'Médico Especialista', salary = 3500 },
+        [4] = { name = 'Diretor', salary = 4500, isboss = true },
+      }
+    },
+    "emergency.revive",
+    "emergency.shop",
+    "emergency.service"
+  },
+  ["repair"] = {
+    _config = {
+      title = "Repair",
+      gtype = "job"
+    },
+    "vehicle.repair",
+    "vehicle.replace",
+    "repair.service"
+  },
+  ['realestate'] = {
+    _config = {
+      title = 'Imobiliária',
+      gtype = 'job',
+      grades = {
+        [1] = { name = 'Junior', salary = 100 },
+        [2] = { name = 'Vendedor I', salary = 150 },
+        [3] = { name = 'Vendedor II', salary = 200 },
+        [4] = { name = 'Gerente', salary = 250 },
+        [5] = { name = 'Diretor', salary = 300, isboss = true },
+      }
+    }
+  },
+  ["taxi"] = {
+    _config = {
+      title = "Taxi",
+      gtype = "job"
+    },
+    "taxi.service"
+  },
 }
 
-
+-- groups are added dynamically using the API or the menu, but you can add group when an user join here
 cfg.users = {
-	[1] = { "developer" },
-	[2] = { "developer" }
+  [1] = { -- give superadmin and admin group to the first created user on the database
+    "superadmin",
+    "admin"
+  }
 }
-
-cfg.selectors = {}
 
 return cfg

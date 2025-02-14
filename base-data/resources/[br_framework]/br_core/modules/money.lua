@@ -1,133 +1,106 @@
-BR.prepare("BR/money_init_user","INSERT IGNORE INTO user_moneys(user_id,bank) VALUES(@user_id,@bank)")
-BR.prepare("BR/get_money","SELECT bank FROM user_moneys WHERE user_id = @user_id")
-BR.prepare("BR/set_money","UPDATE user_moneys SET bank = @bank WHERE user_id = @user_id")
-
-function BR.tryPayment(user_id,amount)
-	if amount >= 0 then
-		if BR.getInventoryItemAmount(user_id,"cartaodebito") >= 1 then
-			if amount >= 0 and BR.getInventoryItemAmount(user_id,"dollars") >= amount then
-				BR.tryGetInventoryItem(user_id,"dollars",amount)
-				return true
-			else
-				local money = BR.getBankMoney(user_id)
-				if amount >= 0 and money >= amount then
-					BR.setBankMoney(user_id,money-amount)
-					return true
-				else
-					return false
-				end
-			end
-		else
-			if amount >= 0 and BR.getInventoryItemAmount(user_id,"dollars") >= amount then
-				BR.tryGetInventoryItem(user_id,"dollars",amount)
-				return true
-			else
-				return false
-			end
-		end
-	end
-	return false
+function BR.getMoney(user_id, moneytype)  
+  moneytype = moneytype or 'cash'
+  return BR.getPlayerTable(user_id)?.money[moneytype] or 0.0
 end
 
-function BR.giveDinheirama(user_id,amount)
-	if amount >= 0 then
-		BR.giveInventoryItem(user_id,"dollars",amount)
-	end
+-- set money
+function BR.setMoney(user_id, value, moneytype, reason, notify)
+  moneytype = moneytype or 'cash'
+  local src = BR.getUserSource(user_id)
+  local player = BR.getPlayerTable(user_id)
+  if not player then
+    return false
+  end
+
+  player.money[moneytype] = value >= 0 and value or 0
+  if notify and reason then
+    BR.notify(source, 'Money', reason, 5000, "inform")
+  end
+
+  TriggerEvent('BR:PlayerMoneyUpdate', user_id, value, moneytype)
+  TriggerClientEvent('BR:client:PlayerMoneyUpdate', src, value, moneytype)  
+  return true
 end
 
-function BR.getMoney(user_id)
-	return BR.getInventoryItemAmount(user_id,"dollars")
+-- try a payment
+-- return true or false (debited if true)
+function BR.tryPayment(user_id, amount, reason, notify)
+  local money = BR.getMoney(user_id)
+  if amount >= 0 and money >= amount then
+    return BR.setMoney(user_id, money - amount, 'cash', reason, notify)     
+  else
+    return false
+  end
 end
 
+function BR.removeMoney(user_id, amount, moneytype, reason, notify)
+  local money = BR.getMoney(user_id, moneytype)
+  if money > 0 and amount > 0 and money >= amount then
+      return BR.setMoney(user_id, money - amount, moneytype, reason, notify)
+  end
+  return false
+end
+
+-- give money
+function BR.giveMoney(user_id, amount, moneytype, reason, notify)
+  if amount > 0 then
+    local money = BR.getMoney(user_id)
+    return BR.setMoney(user_id, money + amount, moneytype, reason, notify)
+  end
+  return false
+end
+
+-- get bank money
 function BR.getBankMoney(user_id)
-	local tmp = BR.getUserTmpTable(user_id)
-	if tmp then
-		return tmp.bank or 0
-	else
-		return 0
-	end
+  return BR.getMoney(user_id, 'bank')
 end
 
-function BR.setBankMoney(user_id,value)
-	local tmp = BR.getUserTmpTable(user_id)
-	if tmp then
-		tmp.bank = value
-	end
+-- set bank money
+function BR.setBankMoney(user_id, value, reason, notify)
+ return BR.setMoney(user_id, value, 'bank', reason, notify)
 end
 
-function BR.giveBankMoney(user_id,amount)
-	if amount >= 0 then
-		local money = BR.getBankMoney(user_id)
-		BR.setBankMoney(user_id,money+amount)
-	end
+-- give bank money
+function BR.giveBankMoney(user_id, amount, reason, notify)
+  return BR.giveMoney(user_id, amount, 'bank', reason, notify)
 end
 
-function BR.tryWithdraw(user_id,amount)
-	local money = BR.getBankMoney(user_id)
-	if amount >= 0 and money >= amount then
-		BR.setBankMoney(user_id,money-amount)
-		BR.giveInventoryItem(user_id,"dollars",amount)
-		return true
-	else
-		return false
-	end
+function BR.removeBankMoney(user_id, amount, reason, notify)
+  return BR.removeMoney(user_id, amount, 'bank', reason, notify)
 end
 
-function BR.tryDeposit(user_id,amount)
-	if amount >= 0 and BR.tryGetInventoryItem(user_id,"dollars",amount) then
-		BR.giveBankMoney(user_id,amount)
-		return true
-	else
-		return false
-	end
+-- try a withdraw
+-- return true or false (withdrawn if true)
+function BR.tryWithdraw(user_id, amount)
+  local money = BR.getMoney(user_id, 'bank')
+  if amount >= 0 and money >= amount then
+    BR.setBankMoney(user_id, money - amount)
+    BR.giveMoney(user_id, amount)
+    return true
+  else
+    return false
+  end
 end
 
--- AddEventHandler("BR:playerJoin",function(user_id,source,name)
--- 	BR.execute("BR/money_init_user",{ user_id = user_id, bank = 5000 })
--- 	local tmp = BR.getUserTmpTable(user_id)
--- 	if tmp then
--- 		local rows = BR.query("BR/get_money",{ user_id = user_id })
--- 		if #rows > 0 then
--- 			tmp.bank = rows[1].bank
--- 		end
--- 	end
--- end)
-
-function BR.MoneyInit(user_id,source,name)
-	BR.execute("BR/money_init_user",{ user_id = user_id, bank = 5000 })
-	local tmp = BR.getUserTmpTable(user_id)
-	if tmp then
-		local rows = BR.query("BR/get_money",{ user_id = user_id })
-		if #rows > 0 then
-			tmp.bank = rows[1].bank
-		end
-	end
+-- try a deposit
+-- return true or false (deposited if true)
+function BR.tryDeposit(user_id, amount)
+  if amount >= 0 and BR.tryPayment(user_id, amount) then
+    return BR.giveBankMoney(user_id, amount)    
+  else
+    return false
+  end
 end
 
-RegisterCommand('savedb',function(source,args,rawCommand)
-	local source = source
-	local user_id = BR.getUserId(source)
-	if user_id then
-		local tmp = BR.getUserTmpTable(user_id)
-		if tmp and tmp.bank then
-			BR.execute("BR/set_money",{ user_id = user_id, bank = tmp.bank })
-		end
-		TriggerClientEvent("save:database",source)
-		TriggerClientEvent("Notify",source,"aviso","Você salvou todo o conteúdo temporário de sua database.")
-	end
-end)
+function BR.tryFullPayment(user_id, amount)
+  local money = BR.getMoney(user_id)
+  if money >= amount then                          -- enough, simple payment
+    return BR.tryPayment(user_id, amount)
+  else                                             -- not enough, withdraw -> payment
+    if BR.tryWithdraw(user_id, amount - money) then -- withdraw to complete amount
+      return BR.tryPayment(user_id, amount)
+    end
+  end
 
-AddEventHandler("BR:playerLeave",function(user_id,source)
-	local tmp = BR.getUserTmpTable(user_id)
-	if tmp and tmp.bank then
-		BR.execute("BR/set_money",{ user_id = user_id, bank = tmp.bank })
-	end
-end)
-
-AddEventHandler("BR:save",function()
-	for k,v in pairs(BR.user_tmp_tables) do
-		if v.bank then
-			BR.execute("BR/set_money",{ user_id = k, bank = v.bank })
-		end
-	end
-end)
+  return false
+end

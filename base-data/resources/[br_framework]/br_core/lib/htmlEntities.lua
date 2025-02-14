@@ -1,3 +1,4 @@
+-- Module options:
 local error_msg_htmlEntities = false
 local debug_htmlEntities = false
 local ASCII_htmlEntities = true
@@ -2349,25 +2350,42 @@ function htmlEntities.decode (input)
 		output = string.gsub(output, '&#x([1234567890]*);', htmlEntities.ASCII_DEC)
 		output = string.gsub(output, '&#([1234567890]*);', htmlEntities.ASCII_HEX)
 	end
+
+	if debug_htmlEntities then print('>>'..output) end
 	return output
 end
 
 function htmlEntities.encode (input)
-	if not input then
-		if error_msg_htmlEntities then error('htmlEntities[encode] >> ERROR: input is value nil') end
-		return false
-	end
-	input = htmlEntities.decode(input)
-	local output = ''
-	for k = 1, string.len(input) do
-		local input = string.sub(input,k,k)
-		if input == "<" or input == ">" then
-			output = output .. '&#'.. input:byte() ..';'
-		else
-			output = output..input
-		end
-	end
-	return output
+  if not input then
+    if error_msg_htmlEntities then error('htmlEntities[encode] >> ERROR: input is value nil') end
+    return false
+  end
+  input = htmlEntities.decode(input)
+  local output = ''
+  for k = 1, string.len(input) do
+    local input = string.sub(input,k,k)
+    -- MODIFIED TO PREVENT UTF8 ISSUES
+    if input == "<" or input == ">" then
+      output = output .. '&#'.. input:byte() ..';'
+    else
+      output = output..input
+    end
+  end
+
+  if debug_htmlEntities then print('>>'..output) end
+  return output
 end
+
+--[[
+function string:htmlDecode(filter)
+	if not self then return false end
+	return htmlEntities.decode(self)
+end
+
+function string:htmlEncode(filter)
+	if not self then return false end
+	return htmlEntities.encode(self)
+end
+--]]
 
 return htmlEntities

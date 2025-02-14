@@ -1,0 +1,48 @@
+lib.print.info('Initializing queries register')
+
+BR.prepare('BR/create_user', 'INSERT INTO users (license, discord, fivem_id)	VALUES (?, ?, ?)')
+BR.prepare('BR/getUser', 'SELECT * FROM users WHERE license = ?')
+
+BR.prepare('BR/setUData', 'REPLACE INTO user_data (user_id, dkey, dvalue) VALUES (?, ?, ?)')
+BR.prepare('BR/getUData', 'SELECT dvalue FROM user_data WHERE user_id = ? AND dkey = ?')
+
+BR.prepare('BR/setPlayerData', 'REPLACE INTO player_data (player_id, dkey, dvalue) VALUES (?, ?, ?)')
+BR.prepare('BR/getPlayerData', 'SELECT dvalue FROM player_data WHERE player_id = ? AND dkey = ?')
+
+
+BR.prepare('BR/setServerData', 'REPLACE INTO server_data (dkey, dvalue) VALUES (?, ?)')
+BR.prepare('BR/getServerData', 'SELECT dvalue FROM server_data WHERE dkey = ?')
+
+BR.prepare('BR/setUserAllowed', 'UPDATE users	SET allowed=? WHERE id = ?')
+BR.prepare('BR/setUserBanned', 'REPLACE INTO banned (user_id, reason) VALUES (?, ?)')
+BR.prepare('BR/removeUserBan', 'DELETE FROM banned WHERE user_id = ?')
+BR.prepare('BR/getUserBanned', 'SELECT * FROM banned WHERE user_id = ?')
+BR.prepare('BR/isUserAllowed', 'SELECT allowed FROM users WHERE id = ?')
+
+BR.prepare('BR/addPlayerVehicle', 'CALL `add_player_vehicle`(?, ?, ?)')
+BR.prepare('BR/removeVehicleFromPlayer', 'DELETE FROM player_vehicles WHERE vehicle = ? AND player_id = ?')
+BR.prepare('BR/updatePlayerVehicleProperties', 'UPDATE player_vehicles SET properties = ? WHERE vehicle = ? AND player_id = ?')
+BR.prepare('BR/transferPlayerVehicle', 'CALL `transfer_player_vehicle(?, ?, ?)`')
+BR.prepare('BR/getPlayerVehicleBy', 'SELECT vehicle, seized, plate, garage, created_at FROM player_vehicles WHERE ?? = ?')
+BR.prepare('BR/isPlayerVehicleSeized', 'SELECT seized FROM player_vehicles WHERE player_id = ? and vehicle = ?')
+BR.prepare('BR/getPlayerVehicleByPlate', 'SELECT vehicle, seized, plate, garage, created_at FROM player_vehicles WHERE plate = ?')
+BR.prepare('BR/getPlayerVehicleProps', 'SELECT properties	FROM player_vehicles WHERE player_id = ? AND vehicle = ?')
+BR.prepare('BR/getPlayerVehiclePropsByPlate', 'SELECT properties	FROM player_vehicles WHERE plate = ?')
+BR.prepare('BR/removeVehicleFromPlayerByPlate', 'DELETE FROM player_vehicles WHERE plate = ?')
+
+
+BR.prepare('BR/addPlayer',
+[[
+INSERT INTO players (user_id, firstname, lastname, gender, `registration`, phone, birth_date, money, inventory, datatable)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+]])
+
+BR.prepare('BR/deletePlayer', 'UPDATE players SET deleted_at = CURRENT_TIMESTAMP() WHERE id = ?')
+BR.prepare('BR/getPlayer', 'SELECT * FROM vplayers WHERE id = ? AND deleted_at IS NULL')
+BR.prepare('BR/getPlayerIncludeDeleted', 'SELECT * FROM vplayers WHERE id = ?')
+BR.prepare('BR/getAllPlayerFromUser', 'SELECT * FROM vplayers WHERE user_id = ? AND deleted_at IS NULL')
+BR.prepare('BR/getAllPlayerFromUserIncludeDeleted', 'SELECT * FROM vplayers WHERE user_id = ?')
+BR.prepare('BR/getPlayersBy', 'SELECT *, (SELECT license FROM `users` WHERE `users`.id = `players`.user_id) AS `license`  FROM players WHERE ?? = ?')
+BR.prepare('BR/addlog', 'INSERT INTO `logs` (log_type, `data`) VALUES (?, ?)')
+
+lib.print.info('Queries register finalized.')

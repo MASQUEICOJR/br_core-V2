@@ -1,5 +1,5 @@
-local Tunnel = module("br_core", "lib/Tunnel")
-local Proxy = module("br_core", "lib/Proxy")
+local Proxy = require('@br_core.lib.Proxy')
+local BR = Proxy.getInterface('BR')
 
 BR = Proxy.getInterface("BR")
 BRSERVER = Tunnel.getInterface(GetCurrentResourceName())
@@ -43,14 +43,6 @@ function BR_idenitidade.getInfos()
 		if BR.hasGroup(user_id, "Prata") then table.insert(vips, { vip = "Prata" }) end
 		if BR.hasGroup(user_id, "Ouro") then table.insert(vips, { vip = "Ouro" }) end
 		if BR.hasGroup(user_id, "Platina") then table.insert(vips, { vip = "Platina" }) end
-		if BR.hasGroup(user_id, "Diamante") then table.insert(vips, { vip = "Diamante" }) end
-		if BR.hasGroup(user_id, "Safira") then table.insert(vips, { vip = "Safira" }) end
-		if BR.hasGroup(user_id, "Esmeralda") then table.insert(vips, { vip = "Esmeralda" }) end
-		if BR.hasGroup(user_id, "Rubi") then table.insert(vips, { vip = "Rubi" }) end
-		if BR.hasGroup(user_id, "RubiPlus") then table.insert(vips, { vip = "RubiPlus" }) end
-		if BR.hasGroup(user_id, "Carnaval") then table.insert(vips, { vip = "Carnaval" }) end
-		if BR.hasGroup(user_id, "Exclusivo Março") then table.insert(vips, { vip = "Exclusivo Março" }) end
-		if BR.hasGroup(user_id, "Exclusivo Maio") then table.insert(vips, { vip = "Exclusivo Maio" }) end
 		
 		if #vips <= 0 then table.insert(vips, { vip = "Nenhum" }) end
 		

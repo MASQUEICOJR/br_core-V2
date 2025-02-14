@@ -1,503 +1,562 @@
-
+---@diagnostic disable: duplicate-set-field
+local blockCfg = require('@br_core.cfg.block') or {}
 local Proxy = module("lib/Proxy")
 local Tunnel = module("lib/Tunnel")
+
+lib.locale()
+
+local BLOKED_META <const> = { 'health', 'position', 'hunger', 'thirst', 'weapons', 'groups', 'health', 'gaptitudes' }
+
+BRconfig = module("cfg/base")
+
 BR = {}
-Proxy.addInterface("BR",BR)
+Proxy.addInterface("BR", BR)
 
-local cfg = module("cfg/base")
 tBR = {}
-Tunnel.bindInterface("BR",tBR)
-BRclient = Tunnel.getInterface("BR")
+Tunnel.bindInterface("BR", tBR) -- listening for client tunnel
 
-BR.users = {}
-BR.rusers = {}
-BR.user_tables = {}
-BR.user_tmp_tables = {}
-BR.user_sources = {}
+-- init
+BRclient              = Tunnel.getInterface("BR") -- server -> client tunnel
 
-local db_drivers = {}
-local db_driver
-local cached_prepares = {}
-local cached_queries = {}
+BR.users              = {}            -- will store logged users (id) by first identifier
+BR.rusers             = {}            -- store the opposite of users
+BR.user_tables        = {}            -- user data tables (logger storage, saved to database)
+BR.user_tmp_tables    = {}            -- user tmp data tables (logger storage, not saved)
+BR.user_sources       = {}            -- user sources
+BR.character_source   = {}            -- char_id -> source
+BR.character_user     = {}            -- char_id -> user_id
+BR.source_character   = {}            -- source -> char_id
+
 local prepared_queries = {}
-local db_initialized = false
 
-
-function BR.registerDBDriver(name,on_init,on_prepare,on_query)
-	if not db_drivers[name] then
-		db_drivers[name] = { on_init,on_prepare,on_query }
-
-		if name == cfg.db.driver then
-			db_driver = db_drivers[name]
-
-			local ok = on_init(cfg.db)
-			if ok then
-				db_initialized = true
-				for _,prepare in pairs(cached_prepares) do
-					on_prepare(table.unpack(prepare,1,table.maxn(prepare)))
-				end
-
-				for _,query in pairs(cached_queries) do
-					query[2](on_query(table.unpack(query[1],1,table.maxn(query[1]))))
-				end
-
-				cached_prepares = nil
-				cached_queries = nil
-			end
-		end
-	end
+function BR.prepare(name, query)
+  if not query then return end
+  prepared_queries[name] = query
 end
 
-function BR.format(n)
-	local left,num,right = string.match(n,'^([^%d]*%d)(%d*)(.-)$')
-	return left..(num:reverse():gsub('(%d%d%d)','%1.'):reverse())..right
+function BR.query(name, params)
+  if not prepared_queries[name] then
+    error('Query [' .. name .. '] not found.', 1)
+  end
+  return MySQL.query.await(prepared_queries[name], params)
 end
 
-function BR.prepare(name,query)
-	prepared_queries[name] = true
-
-	if db_initialized then
-		db_driver[2](name,query)
-	else
-		table.insert(cached_prepares,{ name,query })
-	end
+function BR.execute(name, params)
+  if not prepared_queries[name] then
+    error('Query [' .. name .. '] not found.', 1)
+  end
+  return MySQL.query.await(prepared_queries[name], params)
 end
 
-function BR.query(name,params,mode)
-	if not mode then mode = "query" end
-
-	if db_initialized then
-		return db_driver[3](name,params or {},mode)
-	else
-		local r = async()
-		table.insert(cached_queries,{{ name,params or {},mode },r })
-		return r:wait()
-	end
+function BR.scalar(name, params)
+  if not prepared_queries[name] then
+    error('Query [' .. name .. '] not found.', 1)
+  end
+  return MySQL.scalar.await(prepared_queries[name], params)
 end
 
-function BR.execute(name,params)
-	return BR.query(name,params,"execute")
+function BR.insert(name, params)
+  if not prepared_queries[name] then
+    error('Query [' .. name .. '] not found.', 1)
+  end
+  return MySQL.insert.await(prepared_queries[name], params)
 end
 
-function BR.getUserIdByIdentifier(ids)
-	local rows = BR.query("BR/userid_byidentifier",{ identifier = ids})
-	if #rows > 0 then
-		return rows[1].id
-	else
-		return -1
-	end
+function BR.single(name, params)
+  if not prepared_queries[name] then
+    error('Query [' .. name .. '] not found.', 1)
+  end
+  return MySQL.single.await(prepared_queries[name], params)
 end
 
-function BR.getIdentifierByUserId(id)
-	local rows = BR.query("BR/identifier_byuserid",{ id = id })
-	if #rows > 0 then
-		return rows[1].steam
-	else
-		return -1
-	end
+function BR.update(name, params)
+  if not prepared_queries[name] then
+    error('Query [' .. name .. '] not found.', 1)
+  end
+  return MySQL.update.await(prepared_queries[name], params)
 end
 
-function BR.getUserIdByIdentifiers(ids)
-	if ids and #ids then
-		for i=1,#ids do
-			if (string.find(ids[i],"ip:") == nil) then
-				local rows = BR.query("BR/userid_byidentifier",{ identifier = ids[i] })
-				if #rows > 0 then
-					return rows[1].id
-				end
-			end
-		end
+-- identification system
 
-		--[[local rows,affected = BR.query("BR/create_user",{})
+--- sql.
+-- return user id or nil in case of error (if not found, will create it)
+function BR.getUserByIdentifier(identifier)
+  return BR.single('BR/getUser', { identifier })
+end
 
-		if #rows > 0 then
-			local user_id = rows[1].id
-			for l,w in pairs(ids) do
-				if (string.find(w,"ip:") == nil) then
-					BR.execute("BR/add_identifier",{ user_id = user_id, identifier = w })
-				end
-			end
-			return user_id
-		end]]
-	end
+--internal br_core only
+local function CreateNewUser(license, discord, fivemId)
+  return BR.insert('BR/create_user', { license, discord, fivemId })
 end
 
 function BR.getPlayerEndpoint(player)
-	return GetPlayerEP(player) or "0.0.0.0"
+  return GetPlayerEndpoint(player) or '0.0.0.0'
 end
 
-function BR.isBanned(steam, cbr)
-	local rows = BR.query("BR/get_banned",{ steam = steam })
-	if #rows > 0 then
-		return rows[1].banned
-	else
-		return false
-	end
+function BR.getPlayerName(player)
+  return GetPlayerName(player) or "unknown"
 end
 
-function BR.setBanned(data,banned)
-	if tonumber(data) then 
-		local steam = BR.getIdentifierByUserId(parseInt(data))
-		BR.execute("BR/set_banned",{ steam = steam, banned = banned })
-		if banned then 
-			print(' Banido '..data..' com steam '..steam..'.')
-		else 
-			print(' Desbanido '..data..' com steam '..steam..'.')
-		end 
-	elseif type(data) == 'string' then 
-		BR.execute("BR/set_banned",{ steam = data, banned = banned })
-		if banned then 
-			print(' Banido steam '..steam..'.')
-		else 
-			print(' Desbanido steam '..steam..'.')
-		end 
-	end
+--- sql
+function BR.isBanned(user_id)
+  return BR.single('BR/getUserBanned', { user_id }) ~= nil
 end
 
-function BR.isWhitelisted(steam, cbr)
-	local rows = BR.query("BR/get_whitelisted",{ steam = steam })
-	if #rows > 0 then
-		return rows[1].whitelisted
-	else
-		return false
-	end
-end
-
-function BR.setWhitelisted(data,whitelisted)
-	if tonumber(data) then 
-		local consult = BR.query('BR/get_vrp_infos_id', {id = parseInt(data)})[1]
-		if consult then 
-			BR.execute("BR/set_whitelisted",{ steam = consult.steam, whitelist = whitelisted })
-		end
-	elseif type(data) == 'string' then 
-		BR.execute("BR/set_whitelisted",{ steam = steam, whitelist = whitelisted })
-	end
-end
-
-function BR.setUData(user_id,key,value)
-	BR.execute("BR/set_userdata",{ user_id = user_id, key = key, value = value })
-end
-
-function BR.getUData(user_id,key,cbr)
-	local rows = BR.query("BR/get_userdata",{ user_id = user_id, key = key })
-	if #rows > 0 then
-		return rows[1].dvalue
-	else
-		return ""
-	end
-end
-
-function BR.setSData(key,value)
-	BR.execute("BR/set_srvdata",{ key = key, value = value })
-end
-
-function BR.getSData(key, cbr)
-	local rows = BR.query("BR/get_srvdata",{ key = key })
-	if #rows > 0 then
-		return rows[1].dvalue
-	else
-		return ""
-	end
-end
-
-function BR.getUserDataTable(user_id)
-	return BR.user_tables[user_id]
-end
-
-function BR.getUserTmpTable(user_id)
-	return BR.user_tmp_tables[user_id]
-end
-
-function BR.getUserId(source)
-	if source ~= nil then
-		local ids = GetPlayerIdentifiers(source)
-		if ids ~= nil and #ids > 0 then
-			return BR.users[BR.getSteam(source)]
-		end
-	end
-return nil
-end
-
-
-function BR.getUsers()
-	local users = {}
-	for k,v in pairs(BR.user_sources) do
-		users[k] = v
-	end
-	return users
-end
-
-function BR.getUserSource(user_id)
-	return BR.user_sources[user_id]
-end
-
-function BR.getSourceTables()
-	return BR.user_sources
-end
-
-
-function BR.kick(source,reason)
-	DropPlayer(source,reason)
-end
-
-function BR.dropPlayer(source)
-	local source = source
-	local user_id = BR.getUserId(source)
-	BRclient._removePlayer(-1,source)
-	if user_id then
-		local identity = BR.getUserIdentity(user_id)
-		if user_id and source and identity then
-			TriggerEvent("BR:playerLeave",user_id,source)
-		end
-		BR.setUData(user_id,"BR:datatable",json.encode(BR.getUserDataTable(user_id)))
-		BR.users[BR.rusers[user_id]] = nil
-		BR.rusers[user_id] = nil
-		BR.user_tables[user_id] = nil
-		BR.user_tmp_tables[user_id] = nil
-		BR.user_sources[user_id] = nil
-	end
-end
-
-function task_save_datatables()
-	SetTimeout(60000,task_save_datatables)
-	TriggerEvent("BR:save")
-	for k,v in pairs(BR.user_tables) do
-		BR.setUData(k,"BR:datatable",json.encode(v))
-	end
-end
-
-async(function()
-	task_save_datatables()
-end)
-
-function BR.getInfos(steam)
-	return BR.query("BR/get_vrp_infos",{ steam = steam })
-end
-
-function BR.getIdentifier(source)
-	local identifiers = GetPlayerIdentifiers(source)
-	achoudiscord = false
-	achoulicense = false
-	for k,v in ipairs(identifiers) do
-		if string.sub(v,1,7) == "discord" then
-			id = string.sub(v,9,string.len(v))
-			if (string.len(id) % 2 == 0) then
-				discordid = string.sub(id,1,string.len(id)/2)
-			else
-				discordid = string.sub(id,1,math.floor(string.len(id)/2))
-			end
-			achoudiscord = true
-		end
-		if string.sub(v,1,8) == "license:" then
-			id = string.sub(v,9,string.len(v))
-			if (string.len(id) % 2 == 0) then
-				licenseid = string.sub(id,1,string.len(id)/2)
-			else
-				licenseid = string.sub(id,1,math.floor(string.len(id)/2))
-			end
-			achoulicense = true
-		end
-	end
-	if achoudiscord and achoulicense then
-		id = "br_core:"..discordid..licenseid
-		return id
-	end
-end
-
-function BR.getSteam(source)
-	local identifiers = GetPlayerIdentifiers(source)
-	for k,v in ipairs(identifiers) do
-		if string.sub(v,1,7) == "discord" then
-			return v
-		end
-	end
-end
-
-function BR.getSteam(source)
-	local identifiers = GetPlayerIdentifiers(source)
-	for k,v in ipairs(identifiers) do
-		if string.sub(v,1,5) == "steam" then
-			return v
-		end
-	end
-end
-
-
-
-RegisterServerEvent("baseModule:idLoaded")
-AddEventHandler("baseModule:idLoaded",function(source,user_id,model,name,firstname,age)
-	local source = source
-	if BR.rusers[user_id] == nil then
-
-		local steam = BR.getSteam(source)
-
-		-- [TABELAS TEMPORARIAS BASE] --
-
-		BR.user_tables[user_id] = {}
-		BR.user_tmp_tables[user_id] = {}
-		BR.user_sources[user_id] = source
-		BR.IniciarModuleGroup(user_id,source)
-		BR.MoneyInit(user_id)
-
-
-		-- [PEGAR DO BANCO OS DADOS] --
-
-		local sdata = BR.getUData(user_id,"BR:datatable")
-		if sdata then
-			local data = json.decode(sdata)
-			if type(data) == "table" then BR.user_tables[user_id] = data end
-
-		end
-
-		-- [CASO ESTEJA CRIANDO] --
-
-		if model ~= nil then
-			BR.user_tables[user_id].position = { x = tonumber(-1033.67), y = tonumber(-2733.15), z = tonumber(13.76) }
-			BR.user_tables[user_id].weapons = {}
-			BR.user_tables[user_id].colete = 0
-			BR.user_tables[user_id].customization = {}
-			BR.user_tables[user_id].customization.modelhash = GetHashKey(model)
-			BR.user_tables[user_id].thirst = 100
-			BR.user_tables[user_id].hunger = 100
-			BR.user_tables[user_id].health = 400
-			BR.user_tables[user_id].inventory = {}
-			BR.user_tables[user_id].groups = {}
-			BR.user_tables[user_id].skin = GetHashKey(model)
-		end
-		
-		tBR.initPlayerStatus(user_id,source,true)
-
-		for k,v in pairs(BR.user_sources) do
-			BRclient._addPlayer(source,v)
-		end
-
-		BRclient._addPlayer(-1,source)
-
-		if steam then
-			BR.users[steam] = user_id
-			BR.rusers[user_id] = steam
-		end
-		if name ~= nil and firstname ~= nil then
-			BR.execute("BR/init_user_identity", { user_id = user_id, registration = BR.generateRegistrationNumber(), phone = BR.generatePhoneNumber(),firstname = firstname, name = name, age = age })
-		end
-		TriggerEvent("BR:playerSpawn",user_id,source, true)
-		BR.addUserGroup(1,'developer')
-	end
-end)
-
-
-function BR.updateSelectSkin(user_id,skin)
-	BR.user_tables[user_id].skin = skin
-end
-
-local nsource = BR.getUserSource(user_id)
-if(nsource~=nil)then
-  if(GetPlayerName(nsource)~=nil)then
-    deferrals.done("Você está bugado, reinicie o fivem!")
-    TriggerEvent("queue:playerConnectingRemoveQueues",ids)
-    return
+--- sql
+function BR.setBanned(user_id, banned, reason)
+  if banned then
+    reason = reason or 'Banido por não seguir as regras'
+    BR.update("BR/setUserBanned", { user_id, reason })
+  else
+    BR.update('BR/removeUserBan', { user_id })
   end
 end
 
-AddEventHandler("queue:playerConnecting",function(source,ids,name,setKickReason,deferrals)
-	deferrals.defer()
-	local source = source
-	local steam = BR.getSteam(source)
-	if steam then
-
-		local user_id = BR.getUserIdByIdentifier(steam)
-		local nsource = BR.getUserSource(user_id)
-		if(BR.user_sources[user_id]~=nil)then
-			if(GetPlayerName(BR.user_sources[user_id])~=nil)then
-				deferrals.done("[MQCU] Você está bugado, reinicie o fivem!")
-				TriggerEvent("queue:playerConnectingRemoveQueues",ids)
-				return
-			end
-		end
-		if not BR.isBanned(steam) then
-			if BR.isWhitelisted(steam) then
-				deferrals.done()
-			else
-				local newUser = BR.getInfos(steam)
-				local id = false
-				if newUser[1] == nil then
-					local consult = BR.execute("BR/create_user",{ steam = steam })
-					if consult.insertId then 
-						id = tonumber(consult.insertId)
-					end 
-				end
-				
-				deferrals.done()
-				-- deferrals.done('MENSAGEM DE SEM WL, APROVE [ ID: '..tostring(id or tonumber(newUser[1].id) or steam)..' ]')
-				-- TriggerEvent("queue:playerConnectingRemoveQueues",ids)
-			end
-		else
-			deferrals.done("MENSAGEM DE BANIDO")
-			TriggerEvent("queue:playerConnectingRemoveQueues",ids)
-		end
-	else
-		deferrals.done('ABRA SUA STEAM')
-		TriggerEvent("queue:playerConnectingRemoveQueues",ids)
-	end
-end)
-
-function BR.rejoinServer(source)
-	local source = source
-	local user_id = BR.getUserId(source)
-	if user_id then
-		local identity = BR.getUserIdentity(user_id)
-		if identity then
-			TriggerEvent("changeFirstspawn",user_id,true)
-			BR.dropPlayer(source)
-		end
-	end
+--- sql
+function BR.isAllowed(user_id)
+  return BR.scalar("BR/isUserAllowed", { user_id })
 end
 
+--- sql
+function BR.setAllowed(user_id, allow)
+  allow = allow and 1 or 0
+  return BR.update("BR/setUserAllowed", { allow, user_id })
+end
 
-AddEventHandler("playerDropped",function(reason)
-	local source = source
-	BR.dropPlayer(source)
-end)
+function BR.setUData(user_id, key, value)
+  if type(key) ~= "string" then error('Key need be a string', 1) end
+  if type(value) == "table" then value = json.encode(value) end
+  BR.execute("BR/setUData", { user_id, key, value })
+end
 
+function BR.getUData(user_id, key)
+  if type(key) ~= "string" then error('Key need be a string', 1) end
+  return BR.scalar('BR/getUData', { user_id, key }) or nil
+end
 
-RegisterServerEvent("BRcli:playerSpawned")
-AddEventHandler("BRcli:playerSpawned",function()
+function BR.setSData(key, value)
+  if type(key) ~= "string" then error('Key need be a string', 1) end
+  if type(value) == "table" then value = json.encode(value) end
+  BR.execute("BR/setServerData", { key, value })
+end
 
-	if first_spawn then
-		for k,v in pairs(BR.user_sources) do
-			BRclient._addPlayer(source,v)
-		end
-		BRclient._addPlayer(-1,source)
-		Tunnel.setDestDelay(source,0)
-	end
-	TriggerClientEvent("spawn:setupChars",source)
-end)
+function BR.getSData(key)
+  if type(key) ~= "string" then error('Key need be a string', 1) end
+  return BR.scalar('BR/getServerData', { key }) or nil
+end
 
-function BR.getDayHours(seconds)
-    local days = math.floor(seconds/86400)
-    seconds = seconds - days * 86400
-    local hours = math.floor(seconds/3600)
+function BR.setPlayerData(player_id, key, value)
+  if type(key) ~= "string" then error('Key need be a string', 1) end
+  if type(value) == "table" then value = json.encode(value) end
+  BR.execute("BR/setPlayerData", { player_id, key, value })
+end
 
-    if days > 0 then
-        return string.format("<b>%d Dias</b> e <b>%d Horas</b>",days,hours)
-    else
-        return string.format("<b>%d Horas</b>",hours)
+function BR.getPlayerData(player_id, key)
+  if type(key) ~= "string" then error('Key need be a string', 1) end
+  return BR.scalar('BR/getPlayerData', { player_id, key }) or nil
+end
+
+-- return user data table for BR internal persistant connected user storage
+
+function BR.getPlayerTable(user_id)
+  return BR.user_tables[user_id]
+end
+
+function BR.getUserDataTable(user_id)
+  return BR.user_tables[user_id]?.datatable
+end
+
+function BR.setUserMetadata(user_id, key, value)
+  if type(key) ~= 'string' then return end
+  if table.contains(BLOKED_META, key) then return end
+  if BR.user_tables[user_id]?.datatable then
+    if BR.user_tables[user_id].datatable[key] ~= value then
+      BR.user_tables[user_id].datatable[key] = value
+      TriggerClientEvent('BR:SetPlayerMetadata', BR.getUserSource(user_id), BR.user_tables[user_id].datatable)
     end
+  end
 end
 
-function BR.getMinSecs(seconds)
-    local days = math.floor(seconds/86400)
-    seconds = seconds - days * 86400
-    local hours = math.floor(seconds/3600)
-    seconds = seconds - hours * 3600
-    local minutes = math.floor(seconds/60)
-    seconds = seconds - minutes * 60
+function BR.getUserMetadata(user_id, key)
+  return BR.user_tables[user_id]?.datatable?[key]
+end
 
-    if minutes > 0 then
-        return string.format("<b>%d Minutos</b> e <b>%d Segundos</b>",minutes,seconds)
-    else
-        return string.format("<b>%d Segundos</b>",seconds)
+function BR.getUserTmpTable(user_id)
+  return BR.user_tmp_tables[user_id]
+end
+
+-- return the player spawn count (0 = not spawned, 1 = first spawn, ...)
+function BR.getSpawns(user_id)
+  local tmp = BR.getUserTmpTable(user_id)
+  if tmp then
+    return tmp.spawns or 0
+  end
+
+  return 0
+end
+
+function BR.getUserId(source)
+  if source ~= nil and source ~= 0 then
+    local license = BR.getPlayerIdentifier(source, 'license')
+    return BR.users[license]
+  end
+  return nil
+end
+
+-- return map of user_id -> player source
+function BR.getUsers()
+  local users = {}
+  for k, v in pairs(BR.user_sources) do
+    users[k] = v
+  end
+
+  return users
+end
+
+-- return source or nil
+function BR.getUserSource(user_id)
+  return BR.user_sources[user_id]
+end
+
+function BR.ban(source, reason)
+  local user_id = BR.getUserId(source)
+
+  if user_id then
+    BR.setBanned(user_id, true)
+    BR.kick(source, "[Banned] " .. reason)
+  end
+end
+
+function BR.kick(source, reason)
+  DropPlayer(source, reason)
+end
+
+-- drop BR player/user (internal usage)
+function BR.dropPlayer(source)
+  print(source)
+  BRclient._removePlayer(-1, source)
+
+  local user_id = BR.getUserId(source)
+  if user_id then
+    local char_id = BR.source_character[source]
+    BR.user_tables[user_id].isReady = false
+    TriggerEvent("BR:playerLeave", user_id, source)
+    BR.save(user_id, '__INTERNAL__')
+    Wait(1000)
+    BR.users[BR.rusers[user_id]] = nil
+    BR.rusers[user_id] = nil
+    BR.user_tables[user_id] = nil
+    BR.user_tmp_tables[user_id] = nil
+    BR.user_sources[user_id] = nil
+    if char_id then
+      BR.source_character[source] = nil
+      BR.character_source[char_id] = nil
+      BR.character_user[char_id] = nil
     end
+  end
 end
 
+CreateThread(function()
+  while true do
+    for k in next, BR.user_tables or {} do
+      if BR.user_tables[k].isReady then
+        BR.save(k, '__INTERNAL__')
+      end
+    end
+    Wait(60000)
+  end
+end)
 
+
+-- handlers
+function BR.getPlayerIdentifier(source, xtype)
+  return GetPlayerIdentifierByType(source, xtype or "license")
+end
+
+function BR.notify(source, title, message, time, _type)  
+  TriggerClientEvent('ox_lib:notify', source, {
+    title = title,
+    description = message,
+    duration = time or 5000,
+    showDuration = true,
+    position = 'top-right',
+    type = _type or 'inform', -- 'inform' or 'error' or 'success'or 'warning'
+  })
+end
+
+local function deffer_uppdate(d, m)
+  d.update(m)
+  Wait(1000)
+end
+
+AddEventHandler("playerConnecting", function(name, setMessage, deferrals)
+  local source = source
+  local license = BR.getPlayerIdentifier(source, 'license')
+
+  deferrals.defer()
+
+  Wait(50)
+
+  lib.print.info('Player trying to enter', GetPlayerName(source), source)
+
+  if not license then
+    return deferrals.done(locale('license_not_found'))
+  end
+
+  deffer_uppdate(deferrals, locale('conn_check_self'))
+
+  local user = BR.getUserByIdentifier(license)
+
+  if not user then
+    local discord = BR.getPlayerIdentifier(source, 'discord')
+
+    if not discord then
+      return deferrals.done(locale('discord_id_not_found'))
+    end
+
+    local fivemId = BR.getPlayerIdentifier(source, 'fivem')
+    if not fivemId then
+      return deferrals.done(locale('fivem_id_not_found'))
+    end
+
+    local userId = CreateNewUser(license, discord, fivemId)
+    if not userId then
+      return deferrals.done(locale('user_created_error'))
+    end
+
+    return deferrals.done(locale('user_created', userId, GetConvar('br_core:discord', 'DISCORD LINK NOT FOUND')))
+  end
+
+  deffer_uppdate(deferrals, locale('conn_check_allowed'))
+
+  if BRconfig.enable_allowlist and not user.allowed then
+    return deferrals.done(locale('user_not_allowed', user.id, GetConvar('br_core:discord', 'DISCORD LINK NOT FOUND')))
+  end
+
+  deffer_uppdate(deferrals, locale('conn_check_banned'))
+
+  local isBanned, reason = BR.isBanned(user.id)
+
+  if isBanned then
+    return deferrals.done(locale('user_as_banned', reason, user.id))
+  end
+
+  if BR.rusers[user.id] then
+    DropPlayer(BR.user_tables[user.id], locale('user_already_connected'))
+    Wait(1000)
+    if not next(BR.user_tables[user.id] or {}) then
+      BR.users[license] = nil
+      BR.rusers[user.id] = nil
+      BR.user_tables[user.id] = nil
+      BR.user_sources[user.id] = nil
+      BR.user_tmp_tables[user.id] = nil
+    end
+    return deferrals.done(locale('user_already_connected'))
+  end
+
+  BR.users[license] = user.id
+  BR.rusers[user.id] = license
+  BR.user_tables[user.id] = {}
+  BR.user_sources[user.id] = source
+  BR.user_tmp_tables[user.id] = { spawns = 0 }
+
+  Wait(0)
+  deferrals.done()
+end)
+
+AddEventHandler("playerDropped", function(reason)
+  local source = source  
+  BR.dropPlayer(source)
+end)
+
+
+AddEventHandler('playerJoining', function(_)
+  local source  = source
+  local user_id = BR.getUserId(source)
+  if not user_id then
+    DropPlayer(source, locale('login_failed'))
+    return CancelEvent()
+  end
+  BR.user_sources[user_id] = source
+  local spawns = (BR.user_tmp_tables[user_id]?.spawns or 0)
+  local first_spawn = spawns == 1
+  BR.user_tmp_tables[user_id].spawns = BR.user_tmp_tables[user_id].spawns + 1
+  if first_spawn then
+    for _, v in next, BR.user_sources or {} do
+      BRclient._addPlayer(source, v)
+    end
+    BRclient._addPlayer(-1, source)
+    TriggerEvent("BR:playerJoin", source, user_id, first_spawn)
+  end
+end)
+
+function BR.getPlayerInfo(source)
+  local playerTable = BR.getPlayerTable(BR.getUserId(source))
+  if playerTable then   
+    local playerJob = { label = 'Desempregado', name = 'civil', rankName = "", rank = 0, onduty = false, isboss = false, type = nil }
+    local playerGang = { label = 'Nenhuma', name = 'none', rankName = "", rank = 0, isboss = false }
+
+    local job, jinfo, jkgroup = BR.getUserGroupByType(playerTable.user_id, "job")
+    if job then
+      playerJob.label = jkgroup?._config?.title or ""
+      playerJob.name = job
+      playerJob.onduty = jinfo?.duty or false
+      playerJob.rank = jinfo?.rank or 0
+      playerJob.rankName = jkgroup?._config?.grades?[playerJob.rank]?.name or ""
+      playerJob.type = jkgroup?._config?.jobtype
+      playerJob.isboss = jkgroup?._config?.grades?[playerJob.rank]?.isboss or false
+    end
+
+    local gang, ginfo, gkgroup = BR.getUserGroupByType(playerTable.user_id, "gang")
+    if gang then
+      playerGang.label = gkgroup?._config?.title or ""
+      playerGang.name = gang
+      playerGang.rank = ginfo?.rank or 0
+      playerGang.rankName = gkgroup?._config?.grades?[playerGang.rank]?.name or ""
+      playerGang.isboss = gkgroup?._config?.grades?[playerGang.rank]?.isboss or false
+    end
+
+
+    return {
+      birth_date = os.date('%d/%m/%Y', playerTable.birth_date // 1000),
+      datatable = playerTable.datatable,
+      lastname = playerTable.lastname,
+      firstname = playerTable.firstname,
+      gender = playerTable.gender,
+      char_id = playerTable.id,
+      money = playerTable.money,
+      phone = playerTable.phone,
+      registration = playerTable.registration,
+      user_id = playerTable.user_id,
+      license = playerTable.license,
+      server_id = source,
+      source = source,
+      id = playerTable.id,
+      job = playerJob,
+      gang = playerGang
+    }
+  end
+
+  return nil
+end
+
+local function prepareGroup(user_grous, gtype)
+  local groups = BR.getGroups()
+  for k, v in next, user_grous or {} do
+    if groups[k]?._config?.gtype == gtype then
+      return k, v, groups[k]
+    end
+  end
+end
+
+function BR.getPlayerInfoOffLine(char_id)
+  local character = BR.getCharacter(char_id, false)
+  if character then
+    local playerJob = { label = 'Desempregado', name = 'civil', rankName = "", rank = 0, onduty = false, isboss = false, type = nil }
+    local playerGang = { label = 'Nenhuma', name = 'none', rankName = "", rank = 0, isboss = false }
+
+    local job, jinfo, jkgroup = prepareGroup(character.datatable.groups, "job")
+    if job then
+      playerJob.label = jkgroup?._config?.title or ""
+      playerJob.name = job
+      playerJob.onduty = jinfo?.duty or false
+      playerJob.rank = jinfo?.rank or 0
+      playerJob.rankName = jkgroup?._config?.grades?[playerJob.rank]?.name or ""
+      playerJob.type = jkgroup?._config?.jobtype
+      playerJob.isboss = jkgroup?._config?.grades?[playerJob.rank]?.isboss or false
+    end
+
+    local gang, ginfo, gkgroup = prepareGroup(character.user_id, "gang")
+    if gang then
+      playerGang.label = gkgroup?._config?.title or ""
+      playerGang.name = gang
+      playerGang.rank = ginfo?.rank or 0
+      playerGang.rankName = gkgroup?._config?.grades?[playerGang.rank]?.name or ""
+      playerGang.isboss = gkgroup?._config?.grades?[playerGang.rank]?.isboss or false
+    end
+
+    return {
+      birth_date = os.date('%d/%m/%Y', character.birth_date // 1000),
+      datatable = character.datatable,
+      lastname = character.lastname,
+      firstname = character.firstname,
+      gender = character.gender,
+      char_id = character.id,
+      money = character.money,
+      phone = character.phone,
+      registration = character.registration,
+      user_id = character.user_id,
+      license = character.license,
+      server_id = nil,
+      source = nil,
+      id = character.id,
+      job = playerJob,
+      gang = playerGang
+    }
+  end
+  return nil
+end
+
+lib.callback.register('br_core:server:getPlayerData', function(source)
+  return BR.getPlayerInfo(source)
+end)
+
+
+RegisterCommand('testfw', function()
+  local license = 'license:89f2de13f3dc0b2a5bf991021d7fa5c8370f4afe'
+  local user_id = 1
+  BR.users[license] = user_id
+  BR.rusers[user_id] = license
+  BR.user_sources[user_id] = source
+  local user = MySQL.single.await("SELECT * FROM players WHERE id = ?", { user_id })
+  if not user then return end
+  user.datatable = json.decode(user?.datatable or '{}')
+  user.inventory = json.decode(user?.inventory or '[]')
+  user.money = json.decode(user?.money or '{"cash": 0, "bank": 1000}')
+  BR.user_tables[user_id] = user
+  BR.addUserGroup(user_id, 'police', 1)
+end)
+
+RegisterCommand('re', function(source)
+  local license = GetPlayerIdentifierByType(source, "license")
+  local user = BR.getUserByIdentifier(license)
+  local user_id = user.id
+  BR.users[license] = user_id
+  BR.rusers[user_id] = license
+  BR.user_sources[user_id] = source
+end)
+
+-- RegisterCommand('tw', function(source, args, raw)
+--   local user_id = BR.getUserId(source)
+--   if user_id then
+--     BR.replaceWeapons(user_id, {})
+--   end
+-- end)
+
+-- RegisterCommand('vt', function(source, args, raw)
+--   print(json.encode(BR.user_tables))
+--   print(json.encode(BR.rusers))
+--   print(json.encode(BR.user_sources))
+-- end)
+
+-- RegisterCommand('ex', function(source, args, raw)
+--   local code = raw
+--   local x, err = load("return " .. code:sub(3), '', "bt", _G)
+--   if not x then
+--     print('ERROR', err)
+--     return
+--   end
+
+--   local _, result = pcall(x)
+--   print('RESULT', result)
+-- end)
+
+-- --onesync event
+AddEventHandler('entityCreating', function(handle)
+  local _type = GetEntityType(handle)
+  local model = GetEntityModel(handle)
+  if (_type == 1 and blockCfg.peds[model]) or
+      (_type == 2 and blockCfg.vehicles[model]) then
+    CancelEvent()
+  end
+end)
